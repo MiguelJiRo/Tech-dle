@@ -30,7 +30,7 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
       return emojis.join('');
     }).join('\n');
 
-    const text = `Tech-dle ${gameState.guesses.length}/6\n\n${emojiGrid}\n\nhttps://tech-dle.app`;
+    const text = `Tech-dle ${gameState.guesses.length}/6\n\n${emojiGrid}\n\nhttps://tech-dle.vercel.app`;
     navigator.clipboard.writeText(text);
     alert(t('results.resultsCopied'));
   };
