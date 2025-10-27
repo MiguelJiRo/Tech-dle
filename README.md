@@ -142,7 +142,7 @@ const translations = {
 
 ## Licencia
 
-MIT License - Siéntete libre de usar este proyecto para tu portfolio
+MIT License
 
 ## Créditos
 
