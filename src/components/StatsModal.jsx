@@ -1,5 +1,5 @@
 import Modal from './Modal';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 
 const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
   const { t } = useLanguage();

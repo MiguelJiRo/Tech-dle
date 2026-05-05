@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { technologies, getTechnologyOfTheDay, getDateKey } from './data/technologies';
 import { compareTechnologies, hasWon } from './utils/gameLogic';
 import { saveGameState, loadGameState, saveStats, loadStats } from './utils/storage';
-import { useLanguage } from './i18n/LanguageContext';
+import { useLanguage } from './i18n/useLanguage';
 import Header from './components/Header';
 import GuessGrid from './components/GuessGrid';
 import TechnologyInput from './components/TechnologyInput';
@@ -10,6 +10,8 @@ import ColorGuide from './components/ColorGuide';
 import StatsModal from './components/StatsModal';
 import HelpModal from './components/HelpModal';
 import Footer from './components/Footer';
+
+const logo = '/logo.png';
 
 function App() {
   const { t } = useLanguage();
@@ -20,7 +22,7 @@ function App() {
   const [stats, setStats] = useState(loadStats());
   const [showStats, setShowStats] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  const [currentDate, setCurrentDate] = useState(getDateKey());
+  const [currentDate] = useState(getDateKey());
 
   // Inicializar el juego
   useEffect(() => {
@@ -105,8 +107,15 @@ function App() {
     return (
       <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p>{t('game.loading')}</p>
+          <img
+            src={logo}
+            alt="Tech-dle"
+            width="128"
+            height="128"
+            className="w-32 h-32 mx-auto mb-4 drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)] animate-pulse"
+            fetchpriority="high"
+          />
+          <p className="text-gray-300">{t('game.loading')}</p>
         </div>
       </div>
     );
