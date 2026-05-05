@@ -1,29 +1,24 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import es from './es';
 import en from './en';
+import { LanguageContext } from './context';
 
 const translations = {
   es,
   en
 };
 
-const LanguageContext = createContext();
-
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
-    // Intentar cargar el idioma guardado
     const savedLanguage = localStorage.getItem('techdle-language');
     if (savedLanguage && translations[savedLanguage]) {
       return savedLanguage;
     }
-
-    // Detectar idioma del navegador
     const browserLang = navigator.language.split('-')[0];
     return translations[browserLang] ? browserLang : 'en';
   });
 
   useEffect(() => {
-    // Guardar preferencia de idioma
     localStorage.setItem('techdle-language', language);
   }, [language]);
 
@@ -49,12 +44,4 @@ export const LanguageProvider = ({ children }) => {
       {children}
     </LanguageContext.Provider>
   );
-};
-
-export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
 };

@@ -1,5 +1,5 @@
 import { MATCH_TYPES } from '../utils/gameLogic';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
 
 const GuessRow = ({ comparison }) => {
   const { t } = useLanguage();

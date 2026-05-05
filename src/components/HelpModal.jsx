@@ -1,5 +1,7 @@
 import Modal from './Modal';
-import { useLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/useLanguage';
+
+const logo = '/logo.png';
 
 const HelpModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
@@ -7,9 +9,16 @@ const HelpModal = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('help.title')}>
       <div className="space-y-4 text-gray-300">
-        <p>
-          {t('help.intro')}
-        </p>
+        <div className="flex items-start gap-3 pb-2">
+          <img
+            src={logo}
+            alt=""
+            width="56"
+            height="56"
+            className="w-14 h-14 drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)] shrink-0"
+          />
+          <p className="m-0">{t('help.intro')}</p>
+        </div>
 
         <div>
           <h3 className="font-bold text-white mb-2">{t('help.featuresTitle')}</h3>
