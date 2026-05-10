@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { technologies, getTechnologyOfTheDay, getDateKey, getTechnologyForDateKey, isValidDateKey } from './data/technologies';
 import { compareTechnologies, hasWon, computeHardModeConstraints, validateHardModeGuess, pickHint, availableHintFields } from './utils/gameLogic';
 import { saveGameState, loadGameState, saveStats, loadStats, sharedStorageKey } from './utils/storage';
+import { fireWinConfetti } from './utils/confetti';
 import { useLanguage } from './i18n/useLanguage';
 import { useToast } from './toast/useToast';
 import { useSettings } from './settings/useSettings';
@@ -148,6 +149,8 @@ function App() {
     if (won || lost) {
       setGameOver(true);
       setGameWon(won);
+
+      if (won) fireWinConfetti();
 
       // Actualizar estadísticas (solo en modo diario, no en puzzles compartidos)
       if (!isShared) {
