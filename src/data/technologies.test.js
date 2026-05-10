@@ -61,6 +61,39 @@ describe('getTechnologyForDateKey', () => {
   });
 });
 
+describe('dataset integrity', () => {
+  const VALID_TYPES = new Set(['Lenguaje', 'Framework', 'Base de Datos', 'Herramienta']);
+  const VALID_PARADIGMS = new Set(['Multi-paradigma', 'Orientado a Objetos', 'Funcional', 'Imperativo', 'Declarativo']);
+  const VALID_TYPINGS = new Set(['Estático', 'Dinámico', 'Gradual', 'No aplica']);
+
+  it('has unique ids', () => {
+    const ids = technologies.map((t) => t.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('has unique names', () => {
+    const names = technologies.map((t) => t.name);
+    expect(new Set(names).size).toBe(names.length);
+  });
+
+  it('every entry has the expected shape', () => {
+    technologies.forEach((tech) => {
+      expect(typeof tech.id).toBe('number');
+      expect(typeof tech.name).toBe('string');
+      expect(tech.name.length).toBeGreaterThan(0);
+      expect(typeof tech.year).toBe('number');
+      expect(tech.year).toBeGreaterThan(1900);
+      expect(VALID_TYPES.has(tech.type)).toBe(true);
+      expect(VALID_PARADIGMS.has(tech.paradigm)).toBe(true);
+      expect(VALID_TYPINGS.has(tech.typing)).toBe(true);
+    });
+  });
+
+  it('has at least 100 entries', () => {
+    expect(technologies.length).toBeGreaterThanOrEqual(100);
+  });
+});
+
 describe('millisUntilNextUtcMidnight', () => {
   it('returns 24h when called at UTC midnight', () => {
     const t = new Date(Date.UTC(2025, 5, 10, 0, 0, 0, 0));
