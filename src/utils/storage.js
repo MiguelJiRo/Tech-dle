@@ -1,30 +1,65 @@
 const STORAGE_KEY = 'techdle-game-state';
 const STATS_KEY = 'techdle-stats';
 
-export const saveGameState = (state) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+const DEFAULT_STATS = {
+  gamesPlayed: 0,
+  gamesWon: 0,
+  currentStreak: 0,
+  maxStreak: 0,
+  guessDistribution: [0, 0, 0, 0, 0, 0],
 };
+
+const safeGetItem = (key) => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const safeSetItem = (key, value) => {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+export const saveGameState = (state) => safeSetItem(STORAGE_KEY, JSON.stringify(state));
 
 export const loadGameState = () => {
-  const saved = localStorage.getItem(STORAGE_KEY);
+  const saved = safeGetItem(STORAGE_KEY);
   if (!saved) return null;
-  return JSON.parse(saved);
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return null;
+  }
 };
 
-export const saveStats = (stats) => {
-  localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+export const saveStats = (stats) => safeSetItem(STATS_KEY, JSON.stringify(stats));
+
+const normalizeStats = (raw) => {
+  if (!raw || typeof raw !== 'object') return { ...DEFAULT_STATS };
+  const distribution = Array.isArray(raw.guessDistribution) && raw.guessDistribution.length === 6
+    ? raw.guessDistribution.map((n) => (Number.isFinite(n) ? n : 0))
+    : [...DEFAULT_STATS.guessDistribution];
+  return {
+    gamesPlayed: Number.isFinite(raw.gamesPlayed) ? raw.gamesPlayed : 0,
+    gamesWon: Number.isFinite(raw.gamesWon) ? raw.gamesWon : 0,
+    currentStreak: Number.isFinite(raw.currentStreak) ? raw.currentStreak : 0,
+    maxStreak: Number.isFinite(raw.maxStreak) ? raw.maxStreak : 0,
+    guessDistribution: distribution,
+  };
 };
 
 export const loadStats = () => {
-  const saved = localStorage.getItem(STATS_KEY);
-  if (!saved) {
-    return {
-      gamesPlayed: 0,
-      gamesWon: 0,
-      currentStreak: 0,
-      maxStreak: 0,
-      guessDistribution: [0, 0, 0, 0, 0, 0], // índices 0-5 para intentos 1-6
-    };
+  const saved = safeGetItem(STATS_KEY);
+  if (!saved) return { ...DEFAULT_STATS };
+  try {
+    return normalizeStats(JSON.parse(saved));
+  } catch {
+    return { ...DEFAULT_STATS };
   }
-  return JSON.parse(saved);
 };
