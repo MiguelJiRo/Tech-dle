@@ -1,11 +1,19 @@
 import { useState, useEffect } from 'react';
 import es from './es';
 import en from './en';
+import pt from './pt';
+import fr from './fr';
+import de from './de';
+import it from './it';
 import { LanguageContext } from './context';
 
 const translations = {
   es,
-  en
+  en,
+  pt,
+  fr,
+  de,
+  it,
 };
 
 export const LanguageProvider = ({ children }) => {
