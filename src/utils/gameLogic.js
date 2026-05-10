@@ -98,6 +98,31 @@ export const validateHardModeGuess = (technology, constraints) => {
   return { valid: true };
 };
 
+export const HINT_FIELDS = ['type', 'paradigm', 'typing'];
+
+const fieldsAlreadyConfirmed = (guesses) => {
+  const confirmed = new Set();
+  for (const g of guesses) {
+    if (g.type === MATCH_TYPES.CORRECT) confirmed.add('type');
+    if (g.paradigm === MATCH_TYPES.CORRECT) confirmed.add('paradigm');
+    if (g.typing === MATCH_TYPES.CORRECT) confirmed.add('typing');
+  }
+  return confirmed;
+};
+
+export const availableHintFields = (guesses, alreadyRevealed = []) => {
+  const confirmed = fieldsAlreadyConfirmed(guesses);
+  const used = new Set(alreadyRevealed.map((h) => h.field));
+  return HINT_FIELDS.filter((f) => !confirmed.has(f) && !used.has(f));
+};
+
+export const pickHint = (target, guesses, alreadyRevealed = [], rand = Math.random) => {
+  const candidates = availableHintFields(guesses, alreadyRevealed);
+  if (candidates.length === 0) return null;
+  const field = candidates[Math.floor(rand() * candidates.length)];
+  return { field, value: target[field] };
+};
+
 export const matchSymbol = (match) => {
   switch (match) {
     case MATCH_TYPES.CORRECT: return '✓';

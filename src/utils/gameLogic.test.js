@@ -7,6 +7,8 @@ import {
   hasWon,
   computeHardModeConstraints,
   validateHardModeGuess,
+  availableHintFields,
+  pickHint,
 } from './gameLogic';
 
 const js = { id: 1, name: 'JavaScript', year: 1995, type: 'Lenguaje', paradigm: 'Multi-paradigma', typing: 'Dinámico' };
@@ -160,5 +162,49 @@ describe('hard mode', () => {
       const c = { minYear: 1990, maxYear: 2020, requiredType: 'Lenguaje', requiredParadigm: null, requiredTyping: null };
       expect(validateHardModeGuess({ ...js, year: 2000, type: 'Lenguaje' }, c)).toEqual({ valid: true });
     });
+  });
+});
+
+describe('hint helpers', () => {
+  const target = { id: 100, name: 'Target', year: 2010, type: 'Lenguaje', paradigm: 'Funcional', typing: 'Estático' };
+  const sameType = { id: 1, name: 'X', year: 1990, type: 'Lenguaje', paradigm: 'Imperativo', typing: 'Dinámico' };
+  const sameParadigm = { id: 2, name: 'Y', year: 1990, type: 'Framework', paradigm: 'Funcional', typing: 'Dinámico' };
+
+  it('availableHintFields returns all when nothing confirmed or revealed', () => {
+    expect(availableHintFields([])).toEqual(['type', 'paradigm', 'typing']);
+  });
+
+  it('availableHintFields excludes fields already CORRECT in past guesses', () => {
+    const cmp = compareTechnologies(sameType, target);
+    expect(availableHintFields([cmp])).toEqual(['paradigm', 'typing']);
+  });
+
+  it('availableHintFields excludes fields already revealed via hint', () => {
+    expect(availableHintFields([], [{ field: 'paradigm', value: 'Funcional' }])).toEqual(['type', 'typing']);
+  });
+
+  it('availableHintFields combines confirmed + revealed exclusions', () => {
+    const cmp = compareTechnologies(sameType, target);
+    expect(availableHintFields([cmp], [{ field: 'typing', value: 'Estático' }])).toEqual(['paradigm']);
+  });
+
+  it('pickHint returns null when nothing left', () => {
+    const cmps = [
+      compareTechnologies(sameType, target),
+      compareTechnologies(sameParadigm, target),
+    ];
+    expect(pickHint(target, cmps, [{ field: 'typing', value: 'Estático' }])).toBeNull();
+  });
+
+  it('pickHint returns the value of the chosen field', () => {
+    const hint = pickHint(target, [], [], () => 0);
+    expect(hint.field).toBe('type');
+    expect(hint.value).toBe('Lenguaje');
+  });
+
+  it('pickHint respects revealed list', () => {
+    const hint = pickHint(target, [], [{ field: 'type', value: 'Lenguaje' }], () => 0);
+    expect(hint.field).toBe('paradigm');
+    expect(hint.value).toBe('Funcional');
   });
 });

@@ -10,7 +10,15 @@ export default {
     loading: "Cargando...",
     guessPlaceholder: "Escribe el nombre de una tecnología...",
     attemptsLeft: "Intentos restantes",
-    newTechAvailable: "Una nueva tecnología estará disponible mañana"
+    newTechAvailable: "Una nueva tecnología estará disponible mañana",
+    revealHint: "Pedir pista",
+    hintLabel: "Pista",
+    hintTypeLabel: {
+      type: "El tipo es",
+      paradigm: "El paradigma es",
+      typing: "El tipado es"
+    },
+    noMoreHints: "No quedan pistas que revelar"
   },
 
   // Grid
