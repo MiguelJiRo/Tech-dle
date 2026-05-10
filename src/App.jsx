@@ -1,9 +1,17 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { technologies, getTechnologyOfTheDay, getDateKey } from './data/technologies';
-import { compareTechnologies, hasWon } from './utils/gameLogic';
+import { compareTechnologies, hasWon, computeHardModeConstraints, validateHardModeGuess } from './utils/gameLogic';
 import { saveGameState, loadGameState, saveStats, loadStats } from './utils/storage';
 import { useLanguage } from './i18n/useLanguage';
 import { useToast } from './toast/useToast';
+import { useSettings } from './settings/useSettings';
+
+const formatTechValue = (t, field, value) => {
+  if (field === 'type') return t(`techTypes.${value}`);
+  if (field === 'paradigm') return t(`paradigms.${value}`);
+  if (field === 'typing') return t(`typings.${value}`);
+  return value;
+};
 import Header from './components/Header';
 import GuessGrid from './components/GuessGrid';
 import TechnologyInput from './components/TechnologyInput';
@@ -34,6 +42,7 @@ const initializeGameState = () => {
 function App() {
   const { t } = useLanguage();
   const toast = useToast();
+  const { settings } = useSettings();
   const [initialState] = useState(initializeGameState);
   const { targetTechnology, currentDate, autoOpenStats } = initialState;
   const [guesses, setGuesses] = useState(initialState.guesses);
@@ -83,6 +92,18 @@ function App() {
     if (guesses.some(g => g.technology.id === technology.id)) {
       toast.error(t('toast.duplicateGuess'));
       return;
+    }
+
+    if (settings.hardMode && guesses.length > 0) {
+      const constraints = computeHardModeConstraints(guesses);
+      const validation = validateHardModeGuess(technology, constraints);
+      if (!validation.valid) {
+        const value = ['type', 'paradigm', 'typing'].includes(validation.reason)
+          ? formatTechValue(t, validation.reason, validation.expected)
+          : validation.expected;
+        toast.error(t(`toast.hardMode.${validation.reason}`).replace('{value}', value));
+        return;
+      }
     }
 
     const comparison = compareTechnologies(technology, targetTechnology);

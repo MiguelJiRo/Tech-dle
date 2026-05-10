@@ -51,8 +51,9 @@ const Toggle = ({ checked, onChange, label, describedBy }) => (
 
 const SettingsModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
-  const { settings, setTheme, setColorBlind } = useSettings();
+  const { settings, setTheme, setColorBlind, setHardMode } = useSettings();
   const colorBlindHelpId = 'settings-colorblind-help';
+  const hardModeHelpId = 'settings-hardmode-help';
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('settings.title')}>
@@ -97,6 +98,23 @@ const SettingsModal = ({ isOpen, onClose }) => {
               onChange={setColorBlind}
               label={t('settings.colorBlind')}
               describedBy={colorBlindHelpId}
+            />
+          </div>
+        </div>
+
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-base text-gray-900 dark:text-white">{t('settings.hardMode')}</p>
+              <p id={hardModeHelpId} className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                {t('settings.hardModeHelp')}
+              </p>
+            </div>
+            <Toggle
+              checked={settings.hardMode}
+              onChange={setHardMode}
+              label={t('settings.hardMode')}
+              describedBy={hardModeHelpId}
             />
           </div>
         </div>

@@ -3,6 +3,7 @@ const SETTINGS_KEY = 'techdle-settings';
 export const DEFAULT_SETTINGS = {
   theme: 'system',
   colorBlind: false,
+  hardMode: false,
 };
 
 const VALID_THEMES = new Set(['system', 'dark', 'light']);
@@ -19,7 +20,8 @@ export const normalizeSettings = (raw) => {
   if (!raw || typeof raw !== 'object') return { ...DEFAULT_SETTINGS };
   const theme = VALID_THEMES.has(raw.theme) ? raw.theme : DEFAULT_SETTINGS.theme;
   const colorBlind = typeof raw.colorBlind === 'boolean' ? raw.colorBlind : DEFAULT_SETTINGS.colorBlind;
-  return { theme, colorBlind };
+  const hardMode = typeof raw.hardMode === 'boolean' ? raw.hardMode : DEFAULT_SETTINGS.hardMode;
+  return { theme, colorBlind, hardMode };
 };
 
 export const loadSettings = () => {
