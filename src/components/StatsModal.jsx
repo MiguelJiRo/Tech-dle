@@ -44,19 +44,19 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
         <div className="grid grid-cols-4 gap-4 text-center">
           <div>
             <div className="text-3xl font-bold">{stats.gamesPlayed}</div>
-            <div className="text-xs text-gray-400">{t('stats.gamesPlayed')}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">{t('stats.gamesPlayed')}</div>
           </div>
           <div>
             <div className="text-3xl font-bold">{winPercentage}%</div>
-            <div className="text-xs text-gray-400">{t('stats.winPercentage')}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">{t('stats.winPercentage')}</div>
           </div>
           <div>
             <div className="text-3xl font-bold">{stats.currentStreak}</div>
-            <div className="text-xs text-gray-400">{t('stats.currentStreak')}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">{t('stats.currentStreak')}</div>
           </div>
           <div>
             <div className="text-3xl font-bold">{stats.maxStreak}</div>
-            <div className="text-xs text-gray-400">{t('stats.maxStreak')}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">{t('stats.maxStreak')}</div>
           </div>
         </div>
 
@@ -66,7 +66,7 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
             {stats.guessDistribution.map((count, index) => (
               <div key={index} className="flex items-center gap-2">
                 <span className="w-4 text-sm">{index + 1}</span>
-                <div className="flex-1 bg-gray-700 rounded overflow-hidden">
+                <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded overflow-hidden">
                   <div
                     className="bg-blue-600 h-6 flex items-center justify-end pr-2 text-xs font-bold transition-all"
                     style={{
@@ -92,7 +92,7 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
         )}
 
         {gameState.gameOver && !gameState.gameWon && (
-          <div className="text-center p-4 bg-red-900/20 rounded-lg border border-red-900">
+          <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-300 dark:border-red-900">
             <p className="text-sm mb-2">{t('results.correctAnswer')}</p>
             <p className="text-xl font-bold">{gameState.targetTechnology?.name}</p>
           </div>

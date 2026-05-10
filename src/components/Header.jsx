@@ -2,20 +2,22 @@ import { useLanguage } from '../i18n/useLanguage';
 
 const logo = '/logo.png';
 
-const Header = ({ onOpenStats, onOpenHelp }) => {
-  const { language, changeLanguage } = useLanguage();
+const iconBtn = 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors p-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500';
+
+const Header = ({ onOpenStats, onOpenHelp, onOpenSettings }) => {
+  const { language, changeLanguage, t } = useLanguage();
 
   const toggleLanguage = () => {
     changeLanguage(language === 'es' ? 'en' : 'es');
   };
 
   return (
-    <header className="border-b border-gray-800/80 bg-gray-900/70 backdrop-blur supports-[backdrop-filter]:bg-gray-900/60 sticky top-0 z-30 mb-8">
+    <header className="border-b border-gray-200 dark:border-gray-800/80 bg-white/70 dark:bg-gray-900/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-900/60 sticky top-0 z-30 mb-8">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center gap-2">
-        <div className="flex gap-2">
+        <div className="flex gap-1">
           <button
             onClick={onOpenHelp}
-            className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 rounded-lg hover:bg-gray-800/60"
+            className={`${iconBtn} -ml-2`}
             title="Help"
             aria-label="Help"
           >
@@ -23,9 +25,20 @@ const Header = ({ onOpenStats, onOpenHelp }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </button>
+          <button
+            onClick={onOpenSettings}
+            className={iconBtn}
+            title={t('settings.open')}
+            aria-label={t('settings.open')}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </button>
         </div>
 
-        <a href="/" className="flex items-center gap-2 sm:gap-3 group" aria-label="Tech-dle - inicio">
+        <a href="/" className="flex items-center gap-2 sm:gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg" aria-label="Tech-dle - inicio">
           <img
             src={logo}
             alt=""
@@ -36,7 +49,7 @@ const Header = ({ onOpenStats, onOpenHelp }) => {
             decoding="async"
           />
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            <span className="bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-600 text-transparent bg-clip-text">
+            <span className="bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-600 dark:from-emerald-400 dark:via-blue-500 dark:to-purple-600 text-transparent bg-clip-text">
               Tech-dle
             </span>
           </h1>
@@ -45,7 +58,7 @@ const Header = ({ onOpenStats, onOpenHelp }) => {
         <div className="flex gap-1 sm:gap-2">
           <button
             onClick={toggleLanguage}
-            className="text-gray-400 hover:text-white transition-colors font-semibold text-sm px-2 py-2 rounded-lg hover:bg-gray-800/60"
+            className={`${iconBtn} font-semibold text-sm`}
             title="Change language"
             aria-label="Change language"
           >
@@ -59,7 +72,7 @@ const Header = ({ onOpenStats, onOpenHelp }) => {
 
           <button
             onClick={onOpenStats}
-            className="text-gray-400 hover:text-white transition-colors p-2 -mr-2 rounded-lg hover:bg-gray-800/60"
+            className={`${iconBtn} -mr-2`}
             title="Statistics"
             aria-label="Statistics"
           >

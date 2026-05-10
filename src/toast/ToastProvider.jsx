@@ -6,7 +6,7 @@ const DEFAULT_DURATION = 2800;
 const toneClasses = {
   success: 'bg-green-600/95 text-white border-green-400/40',
   error: 'bg-red-600/95 text-white border-red-400/40',
-  info: 'bg-gray-800/95 text-white border-gray-600/60',
+  info: 'bg-gray-900/95 text-white border-gray-700/60 dark:bg-gray-800/95 dark:border-gray-600/60',
 };
 
 export const ToastProvider = ({ children }) => {
