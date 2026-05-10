@@ -4,6 +4,7 @@ import {
   getTechnologyOfTheDay,
   getTechnologyForDateKey,
   isValidDateKey,
+  listPastDateKeys,
   millisUntilNextUtcMidnight,
   technologies,
 } from './technologies';
@@ -91,6 +92,24 @@ describe('dataset integrity', () => {
 
   it('has at least 100 entries', () => {
     expect(technologies.length).toBeGreaterThanOrEqual(100);
+  });
+});
+
+describe('listPastDateKeys', () => {
+  it('returns yesterday first, descending, excluding today', () => {
+    const today = new Date(Date.UTC(2025, 5, 10));
+    const keys = listPastDateKeys(today, 3);
+    expect(keys).toEqual(['2025-06-09', '2025-06-08', '2025-06-07']);
+  });
+  it('respects the limit', () => {
+    const today = new Date(Date.UTC(2025, 5, 10));
+    expect(listPastDateKeys(today, 10).length).toBe(10);
+  });
+  it('does not return dates before the EPOCH', () => {
+    const today = new Date(Date.UTC(2024, 0, 4));
+    const keys = listPastDateKeys(today, 60);
+    expect(keys.every((k) => k >= '2024-01-01')).toBe(true);
+    expect(keys.length).toBeLessThanOrEqual(3);
   });
 });
 

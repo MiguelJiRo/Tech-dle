@@ -24,6 +24,7 @@ import Countdown from './components/Countdown';
 const StatsModal = lazy(() => import('./components/StatsModal'));
 const HelpModal = lazy(() => import('./components/HelpModal'));
 const SettingsModal = lazy(() => import('./components/SettingsModal'));
+const ArchiveModal = lazy(() => import('./components/ArchiveModal'));
 
 const logo = '/logo.png';
 
@@ -72,13 +73,16 @@ function App() {
   const [showStats, setShowStats] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showArchive, setShowArchive] = useState(false);
   const [hasOpenedStats, setHasOpenedStats] = useState(false);
   const [hasOpenedHelp, setHasOpenedHelp] = useState(false);
   const [hasOpenedSettings, setHasOpenedSettings] = useState(false);
+  const [hasOpenedArchive, setHasOpenedArchive] = useState(false);
 
   const openStats = () => { setHasOpenedStats(true); setShowStats(true); };
   const openHelp = () => { setHasOpenedHelp(true); setShowHelp(true); };
   const openSettings = () => { setHasOpenedSettings(true); setShowSettings(true); };
+  const openArchive = () => { setHasOpenedArchive(true); setShowArchive(true); };
 
   const revealHint = () => {
     if (gameOver || revealedHints.length >= MAX_HINTS) return;
@@ -204,6 +208,7 @@ function App() {
         onOpenStats={openStats}
         onOpenHelp={openHelp}
         onOpenSettings={openSettings}
+        onOpenArchive={openArchive}
       />
 
       <main id="main-content" className="container mx-auto px-4 py-8 max-w-4xl" tabIndex={-1}>
@@ -298,6 +303,12 @@ function App() {
           <SettingsModal
             isOpen={showSettings}
             onClose={() => setShowSettings(false)}
+          />
+        )}
+        {hasOpenedArchive && (
+          <ArchiveModal
+            isOpen={showArchive}
+            onClose={() => setShowArchive(false)}
           />
         )}
       </Suspense>

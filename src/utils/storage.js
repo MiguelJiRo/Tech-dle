@@ -3,6 +3,22 @@ const STATS_KEY = 'techdle-stats';
 
 export const sharedStorageKey = (dateKey) => `${STORAGE_KEY}-shared-${dateKey}`;
 
+export const getSharedSummary = (dateKey) => {
+  const raw = safeGetItem(sharedStorageKey(dateKey));
+  if (!raw) return { played: false };
+  try {
+    const parsed = JSON.parse(raw);
+    return {
+      played: true,
+      gameOver: Boolean(parsed.gameOver),
+      gameWon: Boolean(parsed.gameWon),
+      attempts: Array.isArray(parsed.guesses) ? parsed.guesses.length : 0,
+    };
+  } catch {
+    return { played: false };
+  }
+};
+
 const DEFAULT_STATS = {
   gamesPlayed: 0,
   gamesWon: 0,

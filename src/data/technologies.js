@@ -456,3 +456,18 @@ export const millisUntilNextUtcMidnight = (now = new Date()) => {
   const next = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
   return Math.max(0, next - now.getTime());
 };
+
+export const ARCHIVE_EPOCH_KEY = '2024-01-01';
+
+// Returns past date keys (excluding today), most recent first, capped to `limit`.
+export const listPastDateKeys = (now = new Date(), limit = 60) => {
+  const todayUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const out = [];
+  for (let i = 1; i <= limit; i++) {
+    const t = todayUtc - i * MS_PER_DAY;
+    if (t < EPOCH_UTC) break;
+    const d = new Date(t);
+    out.push(getDateKey(d));
+  }
+  return out;
+};
