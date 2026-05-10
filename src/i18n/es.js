@@ -124,7 +124,24 @@ export default {
     winPercentage: "Victorias",
     currentStreak: "Racha",
     maxStreak: "Mejor Racha",
-    guessDistribution: "Distribución de Intentos"
+    guessDistribution: "Distribución de Intentos",
+    achievementsTitle: "Logros",
+    achievementsCount: "{n} de {total}"
+  },
+
+  // Achievements
+  achievements: {
+    unlockedToast: "¡Logro desbloqueado!",
+    first_win: { title: "Primera victoria", desc: "Adivina la tecnología por primera vez." },
+    ace: { title: "Ases en la manga", desc: "Adivina al primer intento." },
+    second_try: { title: "A la segunda va la vencida", desc: "Adivina en dos intentos." },
+    streak_3: { title: "En racha", desc: "Mantén una racha de 3 victorias seguidas." },
+    streak_7: { title: "Imparable", desc: "Mantén una racha de 7 victorias seguidas." },
+    streak_14: { title: "Quincena de oro", desc: "Mantén una racha de 14 victorias." },
+    streak_30: { title: "Mes perfecto", desc: "Mantén una racha de 30 victorias." },
+    games_10: { title: "Aprendiz", desc: "Juega 10 partidas." },
+    games_50: { title: "Veterano", desc: "Juega 50 partidas." },
+    games_100: { title: "Centenario", desc: "Juega 100 partidas." }
   },
 
   // Help Modal

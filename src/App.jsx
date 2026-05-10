@@ -1,8 +1,9 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { technologies, getTechnologyOfTheDay, getDateKey, getTechnologyForDateKey, isValidDateKey } from './data/technologies';
 import { compareTechnologies, hasWon, computeHardModeConstraints, validateHardModeGuess, pickHint, availableHintFields } from './utils/gameLogic';
-import { saveGameState, loadGameState, saveStats, loadStats, sharedStorageKey } from './utils/storage';
+import { saveGameState, loadGameState, saveStats, loadStats, sharedStorageKey, loadAchievements, saveAchievements } from './utils/storage';
 import { fireWinConfetti } from './utils/confetti';
+import { ACHIEVEMENTS, newlyUnlocked } from './utils/achievements';
 import { useLanguage } from './i18n/useLanguage';
 import { useToast } from './toast/useToast';
 import { useSettings } from './settings/useSettings';
@@ -170,6 +171,24 @@ function App() {
         }
         setStats(newStats);
         saveStats(newStats);
+
+        // Logros recién desbloqueados
+        const justUnlocked = newlyUnlocked(stats, newStats);
+        if (justUnlocked.length > 0) {
+          const seen = new Set(loadAchievements());
+          const trulyNew = justUnlocked.filter((id) => !seen.has(id));
+          if (trulyNew.length > 0) {
+            const merged = [...seen, ...trulyNew];
+            saveAchievements(merged);
+            trulyNew.forEach((id, i) => {
+              const def = ACHIEVEMENTS.find((a) => a.id === id);
+              const icon = def?.icon ?? '🏅';
+              setTimeout(() => {
+                toast.success(`${icon} ${t('achievements.unlockedToast')} ${t(`achievements.${id}.title`)}`, { duration: 4500 });
+              }, 1400 + i * 600);
+            });
+          }
+        }
       }
 
       // Mostrar modal de estadísticas después de un breve delay

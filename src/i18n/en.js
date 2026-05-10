@@ -124,7 +124,24 @@ export default {
     winPercentage: "Win %",
     currentStreak: "Streak",
     maxStreak: "Max Streak",
-    guessDistribution: "Guess Distribution"
+    guessDistribution: "Guess Distribution",
+    achievementsTitle: "Achievements",
+    achievementsCount: "{n} of {total}"
+  },
+
+  // Achievements
+  achievements: {
+    unlockedToast: "Achievement unlocked!",
+    first_win: { title: "First win", desc: "Guess the technology for the first time." },
+    ace: { title: "Ace", desc: "Guess on the very first try." },
+    second_try: { title: "Second try is the charm", desc: "Guess in two attempts." },
+    streak_3: { title: "On a roll", desc: "Keep a 3-day winning streak." },
+    streak_7: { title: "Unstoppable", desc: "Keep a 7-day winning streak." },
+    streak_14: { title: "Two-week star", desc: "Keep a 14-day winning streak." },
+    streak_30: { title: "Perfect month", desc: "Keep a 30-day winning streak." },
+    games_10: { title: "Apprentice", desc: "Play 10 games." },
+    games_50: { title: "Veteran", desc: "Play 50 games." },
+    games_100: { title: "Centenary", desc: "Play 100 games." }
   },
 
   // Help Modal

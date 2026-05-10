@@ -2,6 +2,7 @@ import Modal from './Modal';
 import { useLanguage } from '../i18n/useLanguage';
 import { useToast } from '../toast/useToast';
 import Countdown from './Countdown';
+import { ACHIEVEMENTS, achievementsUnlocked } from '../utils/achievements';
 
 const SHARE_BASE_URL = 'https://tech-dle.vercel.app';
 
@@ -106,6 +107,43 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
             <Countdown />
           </div>
         )}
+
+        <div>
+          <div className="flex items-baseline justify-between mb-3">
+            <h3 className="font-bold">{t('stats.achievementsTitle')}</h3>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {t('stats.achievementsCount')
+                .replace('{n}', achievementsUnlocked(stats).size)
+                .replace('{total}', ACHIEVEMENTS.length)}
+            </span>
+          </div>
+          <ul className="grid grid-cols-2 gap-2">
+            {ACHIEVEMENTS.map((a) => {
+              const unlocked = achievementsUnlocked(stats).has(a.id);
+              return (
+                <li
+                  key={a.id}
+                  className={`flex items-start gap-2 px-3 py-2 rounded-md border ${
+                    unlocked
+                      ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-300 dark:border-amber-700'
+                      : 'bg-gray-50 dark:bg-gray-800/40 border-gray-200 dark:border-gray-700 opacity-60'
+                  }`}
+                  aria-label={`${unlocked ? '✓' : '✗'} ${t(`achievements.${a.id}.title`)}`}
+                >
+                  <span className={`text-xl leading-none ${unlocked ? '' : 'grayscale'}`} aria-hidden="true">{a.icon}</span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-semibold text-gray-900 dark:text-white truncate">
+                      {t(`achievements.${a.id}.title`)}
+                    </span>
+                    <span className="block text-xs text-gray-600 dark:text-gray-400">
+                      {t(`achievements.${a.id}.desc`)}
+                    </span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </Modal>
   );
