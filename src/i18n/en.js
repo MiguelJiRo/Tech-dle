@@ -11,6 +11,9 @@ export default {
     guessPlaceholder: "Type a technology name...",
     attemptsLeft: "Attempts left",
     newTechAvailable: "A new technology will be available tomorrow",
+    nextIn: "New tech in {h}h {m}m",
+    sharedBanner: "You're playing the puzzle from {date}",
+    backToToday: "Back to today's puzzle",
     revealHint: "Reveal a hint",
     hintLabel: "Hint",
     hintTypeLabel: {

@@ -1,6 +1,9 @@
 import Modal from './Modal';
 import { useLanguage } from '../i18n/useLanguage';
 import { useToast } from '../toast/useToast';
+import Countdown from './Countdown';
+
+const SHARE_BASE_URL = 'https://tech-dle.vercel.app';
 
 const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
   const { t } = useLanguage();
@@ -28,7 +31,11 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
       yearEmoji(guess.year.match) + fieldEmoji(guess.type) + fieldEmoji(guess.paradigm) + fieldEmoji(guess.typing)
     ).join('\n');
 
-    const text = `Tech-dle ${gameState.guesses.length}/6\n\n${emojiGrid}\n\nhttps://tech-dle.vercel.app`;
+    const url = gameState.currentDate ? `${SHARE_BASE_URL}/?d=${gameState.currentDate}` : SHARE_BASE_URL;
+    const header = gameState.currentDate
+      ? `Tech-dle ${gameState.currentDate} ${gameState.guesses.length}/6`
+      : `Tech-dle ${gameState.guesses.length}/6`;
+    const text = `${header}\n\n${emojiGrid}\n\n${url}`;
     navigator.clipboard.writeText(text)
       .then(() => toast.success(t('results.resultsCopied')))
       .catch(() => toast.error(t('results.copyFailed')));
@@ -91,6 +98,12 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
           <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-300 dark:border-red-900">
             <p className="text-sm mb-2">{t('results.correctAnswer')}</p>
             <p className="text-xl font-bold">{gameState.targetTechnology?.name}</p>
+          </div>
+        )}
+
+        {gameState.gameOver && !gameState.isShared && (
+          <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+            <Countdown />
           </div>
         )}
       </div>

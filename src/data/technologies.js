@@ -340,9 +340,22 @@ export const getTechnologyOfTheDay = (now = new Date()) => {
   return technologies[index];
 };
 
+export const isValidDateKey = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
+
+export const getTechnologyForDateKey = (dateKey) => {
+  if (!isValidDateKey(dateKey)) return null;
+  const [y, m, d] = dateKey.split('-').map(Number);
+  return getTechnologyOfTheDay(new Date(Date.UTC(y, m - 1, d)));
+};
+
 export const getDateKey = (now = new Date()) => {
   const y = now.getUTCFullYear();
   const m = String(now.getUTCMonth() + 1).padStart(2, '0');
   const d = String(now.getUTCDate()).padStart(2, '0');
   return `${y}-${m}-${d}`;
+};
+
+export const millisUntilNextUtcMidnight = (now = new Date()) => {
+  const next = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
+  return Math.max(0, next - now.getTime());
 };

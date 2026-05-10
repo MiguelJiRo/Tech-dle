@@ -1,7 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { technologies, getTechnologyOfTheDay, getDateKey } from './data/technologies';
+import { technologies, getTechnologyOfTheDay, getDateKey, getTechnologyForDateKey, isValidDateKey } from './data/technologies';
 import { compareTechnologies, hasWon, computeHardModeConstraints, validateHardModeGuess, pickHint, availableHintFields } from './utils/gameLogic';
-import { saveGameState, loadGameState, saveStats, loadStats } from './utils/storage';
+import { saveGameState, loadGameState, saveStats, loadStats, sharedStorageKey } from './utils/storage';
 import { useLanguage } from './i18n/useLanguage';
 import { useToast } from './toast/useToast';
 import { useSettings } from './settings/useSettings';
@@ -18,6 +18,7 @@ import TechnologyInput from './components/TechnologyInput';
 import ColorGuide from './components/ColorGuide';
 import Footer from './components/Footer';
 import HintPanel, { MAX_HINTS } from './components/HintPanel';
+import Countdown from './components/Countdown';
 
 const StatsModal = lazy(() => import('./components/StatsModal'));
 const HelpModal = lazy(() => import('./components/HelpModal'));
@@ -25,14 +26,29 @@ const SettingsModal = lazy(() => import('./components/SettingsModal'));
 
 const logo = '/logo.png';
 
+const getSharedDateFromUrl = () => {
+  if (typeof window === 'undefined') return null;
+  const raw = new URLSearchParams(window.location.search).get('d');
+  if (!isValidDateKey(raw)) return null;
+  // Reject future dates: only allow today or past
+  if (raw > getDateKey()) return null;
+  return raw;
+};
+
 const initializeGameState = () => {
-  const dateKey = getDateKey();
-  const target = getTechnologyOfTheDay();
-  const saved = loadGameState();
+  const sharedDate = getSharedDateFromUrl();
+  const todayKey = getDateKey();
+  const isShared = Boolean(sharedDate) && sharedDate !== todayKey;
+  const dateKey = isShared ? sharedDate : todayKey;
+  const target = isShared ? getTechnologyForDateKey(sharedDate) : getTechnologyOfTheDay();
+  const storageKey = isShared ? sharedStorageKey(sharedDate) : undefined;
+  const saved = loadGameState(storageKey);
   const resume = saved && saved.date === dateKey;
   return {
     targetTechnology: target,
     currentDate: dateKey,
+    storageKey,
+    isShared,
     guesses: resume ? saved.guesses : [],
     gameOver: resume ? saved.gameOver : false,
     gameWon: resume ? saved.gameWon : false,
@@ -46,7 +62,7 @@ function App() {
   const toast = useToast();
   const { settings } = useSettings();
   const [initialState] = useState(initializeGameState);
-  const { targetTechnology, currentDate, autoOpenStats } = initialState;
+  const { targetTechnology, currentDate, autoOpenStats, isShared, storageKey } = initialState;
   const [guesses, setGuesses] = useState(initialState.guesses);
   const [gameOver, setGameOver] = useState(initialState.gameOver);
   const [gameWon, setGameWon] = useState(initialState.gameWon);
@@ -93,9 +109,9 @@ function App() {
         revealedHints,
         targetTechnology,
       };
-      saveGameState(gameState);
+      saveGameState(gameState, storageKey);
     }
-  }, [guesses, gameOver, gameWon, revealedHints, currentDate, targetTechnology]);
+  }, [guesses, gameOver, gameWon, revealedHints, currentDate, targetTechnology, storageKey]);
 
   const handleGuess = (technology) => {
     if (!targetTechnology) return;
@@ -133,21 +149,21 @@ function App() {
       setGameOver(true);
       setGameWon(won);
 
-      // Actualizar estadísticas
-      const newStats = { ...stats };
-      newStats.gamesPlayed++;
-
-      if (won) {
-        newStats.gamesWon++;
-        newStats.currentStreak++;
-        newStats.maxStreak = Math.max(newStats.maxStreak, newStats.currentStreak);
-        newStats.guessDistribution[newGuesses.length - 1]++;
-      } else {
-        newStats.currentStreak = 0;
+      // Actualizar estadísticas (solo en modo diario, no en puzzles compartidos)
+      if (!isShared) {
+        const newStats = { ...stats };
+        newStats.gamesPlayed++;
+        if (won) {
+          newStats.gamesWon++;
+          newStats.currentStreak++;
+          newStats.maxStreak = Math.max(newStats.maxStreak, newStats.currentStreak);
+          newStats.guessDistribution[newGuesses.length - 1]++;
+        } else {
+          newStats.currentStreak = 0;
+        }
+        setStats(newStats);
+        saveStats(newStats);
       }
-
-      setStats(newStats);
-      saveStats(newStats);
 
       // Mostrar modal de estadísticas después de un breve delay
       setTimeout(() => { setHasOpenedStats(true); setShowStats(true); }, 1000);
@@ -188,6 +204,18 @@ function App() {
       />
 
       <main id="main-content" className="container mx-auto px-4 py-8 max-w-4xl" tabIndex={-1}>
+        {isShared && (
+          <div className="max-w-2xl mx-auto mb-6 px-4 py-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-100 text-sm flex items-center justify-between gap-3 flex-wrap">
+            <span>{t('game.sharedBanner').replace('{date}', currentDate)}</span>
+            <a
+              href="/"
+              className="font-semibold underline hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded"
+            >
+              {t('game.backToToday')}
+            </a>
+          </div>
+        )}
+
         <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
           {t('header.subtitle')}
         </p>
@@ -230,6 +258,11 @@ function App() {
                 </p>
               </div>
             )}
+            {!isShared && (
+              <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+                <Countdown />
+              </p>
+            )}
           </div>
         )}
 
@@ -247,6 +280,8 @@ function App() {
               gameOver,
               gameWon,
               targetTechnology,
+              currentDate,
+              isShared,
             }}
           />
         )}
