@@ -34,6 +34,19 @@ export default {
     copyFailed: "No se pudieron copiar los resultados"
   },
 
+  // Settings
+  settings: {
+    title: "Ajustes",
+    open: "Abrir ajustes",
+    theme: "Tema",
+    themeOptions: {
+      system: "Sistema",
+      dark: "Oscuro",
+      light: "Claro"
+    },
+    themeHelp: "Sigue la preferencia del sistema, o fija uno fijo."
+  },
+
   // Toasts
   toast: {
     duplicateGuess: "Ya has probado esa tecnología",

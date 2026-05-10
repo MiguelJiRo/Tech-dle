@@ -66,7 +66,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black bg-opacity-75"
+        className="absolute inset-0 bg-black/50 dark:bg-black/75"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -76,13 +76,13 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="relative bg-gray-800 rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gray-700 outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        className="relative bg-white dark:bg-gray-800 rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 shadow-xl outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 id={titleId} className="text-2xl font-bold">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors p-1 rounded-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors p-1 rounded-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
             aria-label="Close"
             type="button"
           >

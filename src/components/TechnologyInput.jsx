@@ -64,21 +64,23 @@ const TechnologyInput = ({ technologies, onGuess, disabled }) => {
         onKeyDown={handleKeyDown}
         placeholder={t('game.guessPlaceholder')}
         disabled={disabled}
-        className="w-full px-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full px-4 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg border border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
       />
 
       {isOpen && suggestions.length > 0 && !disabled && (
-        <div className="absolute z-10 w-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+        <div className="absolute z-10 w-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
           {suggestions.map((tech, index) => (
             <button
               key={tech.id}
               onClick={() => handleSubmit(tech)}
-              className={`w-full px-4 py-3 text-left hover:bg-gray-700 transition-colors ${
-                index === selectedIndex ? 'bg-gray-700' : ''
+              className={`w-full px-4 py-3 text-left transition-colors ${
+                index === selectedIndex
+                  ? 'bg-gray-100 dark:bg-gray-700'
+                  : 'hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
-              <div className="font-semibold">{tech.name}</div>
-              <div className="text-sm text-gray-400">
+              <div className="font-semibold text-gray-900 dark:text-white">{tech.name}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
                 {t(`techTypes.${tech.type}`)} • {tech.year}
               </div>
             </button>

@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 
 const StatsModal = lazy(() => import('./components/StatsModal'));
 const HelpModal = lazy(() => import('./components/HelpModal'));
+const SettingsModal = lazy(() => import('./components/SettingsModal'));
 
 const logo = '/logo.png';
 
@@ -41,11 +42,14 @@ function App() {
   const [stats, setStats] = useState(loadStats);
   const [showStats, setShowStats] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [hasOpenedStats, setHasOpenedStats] = useState(false);
   const [hasOpenedHelp, setHasOpenedHelp] = useState(false);
+  const [hasOpenedSettings, setHasOpenedSettings] = useState(false);
 
   const openStats = () => { setHasOpenedStats(true); setShowStats(true); };
   const openHelp = () => { setHasOpenedHelp(true); setShowHelp(true); };
+  const openSettings = () => { setHasOpenedSettings(true); setShowSettings(true); };
 
   // Auto-abrir el modal de stats si el juego ya estaba terminado al cargar
   useEffect(() => {
@@ -115,24 +119,24 @@ function App() {
 
   if (!targetTechnology) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white flex items-center justify-center">
         <div className="text-center">
           <img
             src={logo}
             alt="Tech-dle"
             width="128"
             height="128"
-            className="w-32 h-32 mx-auto mb-4 drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)] animate-pulse"
+            className="w-32 h-32 mx-auto mb-4 drop-shadow-[0_8px_24px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)] animate-pulse"
             fetchpriority="high"
           />
-          <p className="text-gray-300">{t('game.loading')}</p>
+          <p className="text-gray-600 dark:text-gray-300">{t('game.loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[70] focus:bg-blue-600 focus:text-white focus:px-3 focus:py-2 focus:rounded-md focus:font-semibold focus-visible:ring-2 focus-visible:ring-white"
@@ -143,10 +147,11 @@ function App() {
       <Header
         onOpenStats={openStats}
         onOpenHelp={openHelp}
+        onOpenSettings={openSettings}
       />
 
       <main id="main-content" className="container mx-auto px-4 py-8 max-w-4xl" tabIndex={-1}>
-        <p className="text-center text-gray-400 mb-8">
+        <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
           {t('header.subtitle')}
         </p>
 
@@ -163,9 +168,9 @@ function App() {
         {gameOver && (
           <div className="text-center mb-6" role="status" aria-live="polite">
             {gameWon ? (
-              <div className="bg-green-900/20 border border-green-900 rounded-lg p-4">
-                <p className="text-2xl font-bold text-green-500 mb-2">{t('results.congratulations')}</p>
-                <p className="text-gray-300">
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-300 dark:border-green-900 rounded-lg p-4">
+                <p className="text-2xl font-bold text-green-700 dark:text-green-400 mb-2">{t('results.congratulations')}</p>
+                <p className="text-gray-700 dark:text-gray-300">
                   {guesses.length === 1
                     ? t('results.won').replace('{count}', guesses.length)
                     : t('results.wonPlural').replace('{count}', guesses.length)
@@ -173,10 +178,10 @@ function App() {
                 </p>
               </div>
             ) : (
-              <div className="bg-red-900/20 border border-red-900 rounded-lg p-4">
-                <p className="text-2xl font-bold text-red-500 mb-2">{t('results.gameOver')}</p>
-                <p className="text-gray-300 mb-2">
-                  {t('results.correctAnswer')} <strong className="text-white">{targetTechnology.name}</strong>
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-900 rounded-lg p-4">
+                <p className="text-2xl font-bold text-red-700 dark:text-red-400 mb-2">{t('results.gameOver')}</p>
+                <p className="text-gray-700 dark:text-gray-300 mb-2">
+                  {t('results.correctAnswer')} <strong className="text-gray-900 dark:text-white">{targetTechnology.name}</strong>
                 </p>
               </div>
             )}
@@ -204,6 +209,12 @@ function App() {
           <HelpModal
             isOpen={showHelp}
             onClose={() => setShowHelp(false)}
+          />
+        )}
+        {hasOpenedSettings && (
+          <SettingsModal
+            isOpen={showSettings}
+            onClose={() => setShowSettings(false)}
           />
         )}
       </Suspense>

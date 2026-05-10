@@ -12,14 +12,14 @@ const yearArrow = (yearComparison) => {
 const cellColor = (match) => {
   switch (match) {
     case MATCH_TYPES.CORRECT:
-      return 'bg-green-600';
+      return 'bg-green-600 text-white';
     case MATCH_TYPES.PARTIAL:
-      return 'bg-yellow-600';
+      return 'bg-yellow-500 dark:bg-yellow-600 text-white';
     case MATCH_TYPES.HIGHER:
     case MATCH_TYPES.LOWER:
-      return 'bg-orange-600';
+      return 'bg-orange-500 dark:bg-orange-600 text-white';
     default:
-      return 'bg-gray-700';
+      return 'bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white';
   }
 };
 
@@ -67,7 +67,7 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded }) => {
         aria-label={t('a11y.emptyRow').replace('{n}', rowIndex + 1).replace('{total}', totalRows)}
       >
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="bg-gray-800 rounded min-h-16 sm:min-h-20 border border-gray-700" aria-hidden="true" />
+          <div key={i} className="bg-gray-100 dark:bg-gray-800 rounded min-h-16 sm:min-h-20 border border-gray-300 dark:border-gray-700" aria-hidden="true" />
         ))}
       </div>
     );
@@ -79,7 +79,7 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded }) => {
   return (
     <div className="grid grid-cols-5 gap-1.5 sm:gap-2 mb-1.5 sm:mb-2" role="row" aria-label={summary}>
       <Cell
-        color="bg-blue-600"
+        color="bg-blue-600 text-white"
         value={tech.name}
         ariaLabel={`${t('grid.name')}: ${tech.name}`}
         animate={isJustAdded}
@@ -134,7 +134,7 @@ const GuessGrid = ({ guesses, maxGuesses = 6 }) => {
   return (
     <div className="mb-6" role="grid" aria-label={t('a11y.gridLabel')}>
       <div
-        className="grid grid-cols-5 gap-1.5 sm:gap-2 mb-2 px-1 text-[0.65rem] sm:text-xs font-semibold uppercase tracking-wider text-gray-400 text-center"
+        className="grid grid-cols-5 gap-1.5 sm:gap-2 mb-2 px-1 text-[0.65rem] sm:text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 text-center"
         role="row"
         aria-hidden="true"
       >

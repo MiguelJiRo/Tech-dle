@@ -3,8 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#111827" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111827" />
+    <meta name="color-scheme" content="dark light" />
+
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('techdle-settings');
+          var pref = 'system';
+          if (saved) {
+            try { pref = (JSON.parse(saved) || {}).theme || 'system'; } catch (e) {}
+          }
+          var dark = pref === 'dark' || (pref === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          if (dark) root.classList.add('dark');
+          root.style.colorScheme = dark ? 'dark' : 'light';
+          root.dataset.theme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
 
     <title>Tech-dle - Adivina la Tecnologia del Dia</title>
     <meta name="description" content="Tech-dle es el Wordle de las tecnologias: adivina el lenguaje, framework o herramienta del dia en 6 intentos. Pistas por anyo, tipo, paradigma y tipado. Nuevo reto cada dia." />
