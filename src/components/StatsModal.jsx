@@ -6,7 +6,7 @@ import { ACHIEVEMENTS, achievementsUnlocked } from '../utils/achievements';
 
 const SHARE_BASE_URL = 'https://tech-dle.vercel.app';
 
-const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
+const StatsModal = ({ isOpen, onClose, stats, gameState, onOpenHistory }) => {
   const { t } = useLanguage();
   const toast = useToast();
   const winPercentage = stats.gamesPlayed > 0
@@ -106,6 +106,16 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
           <div className="text-center text-sm text-gray-500 dark:text-gray-400">
             <Countdown />
           </div>
+        )}
+
+        {onOpenHistory && (
+          <button
+            type="button"
+            onClick={onOpenHistory}
+            className="w-full px-3 py-2 rounded-md text-sm font-semibold border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          >
+            {t('stats.viewHistory')}
+          </button>
         )}
 
         <div>

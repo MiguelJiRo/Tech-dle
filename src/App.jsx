@@ -1,7 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { technologies, getTechnologyOfTheDay, getDateKey, getTechnologyForDateKey, isValidDateKey } from './data/technologies';
 import { compareTechnologies, hasWon, computeHardModeConstraints, validateHardModeGuess, pickHint, availableHintFields } from './utils/gameLogic';
-import { saveGameState, loadGameState, saveStats, loadStats, sharedStorageKey, loadAchievements, saveAchievements } from './utils/storage';
+import { saveGameState, loadGameState, saveStats, loadStats, sharedStorageKey, loadAchievements, saveAchievements, appendHistoryEntry } from './utils/storage';
 import { fireWinConfetti } from './utils/confetti';
 import { ACHIEVEMENTS, newlyUnlocked } from './utils/achievements';
 import { useLanguage } from './i18n/useLanguage';
@@ -26,6 +26,7 @@ const StatsModal = lazy(() => import('./components/StatsModal'));
 const HelpModal = lazy(() => import('./components/HelpModal'));
 const SettingsModal = lazy(() => import('./components/SettingsModal'));
 const ArchiveModal = lazy(() => import('./components/ArchiveModal'));
+const HistoryModal = lazy(() => import('./components/HistoryModal'));
 
 const logo = '/logo.png';
 
@@ -75,15 +76,18 @@ function App() {
   const [showHelp, setShowHelp] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const [hasOpenedStats, setHasOpenedStats] = useState(false);
   const [hasOpenedHelp, setHasOpenedHelp] = useState(false);
   const [hasOpenedSettings, setHasOpenedSettings] = useState(false);
   const [hasOpenedArchive, setHasOpenedArchive] = useState(false);
+  const [hasOpenedHistory, setHasOpenedHistory] = useState(false);
 
   const openStats = () => { setHasOpenedStats(true); setShowStats(true); };
   const openHelp = () => { setHasOpenedHelp(true); setShowHelp(true); };
   const openSettings = () => { setHasOpenedSettings(true); setShowSettings(true); };
   const openArchive = () => { setHasOpenedArchive(true); setShowArchive(true); };
+  const openHistory = () => { setHasOpenedHistory(true); setShowHistory(true); };
 
   const revealHint = () => {
     if (gameOver || revealedHints.length >= MAX_HINTS) return;
@@ -159,6 +163,13 @@ function App() {
 
       // Actualizar estadísticas (solo en modo diario, no en puzzles compartidos)
       if (!isShared) {
+        appendHistoryEntry({
+          date: currentDate,
+          targetName: targetTechnology.name,
+          attempts: newGuesses.length,
+          won,
+        });
+
         const newStats = { ...stats };
         newStats.gamesPlayed++;
         if (won) {
@@ -302,6 +313,7 @@ function App() {
             isOpen={showStats}
             onClose={() => setShowStats(false)}
             stats={stats}
+            onOpenHistory={openHistory}
             gameState={{
               guesses,
               gameOver,
@@ -328,6 +340,12 @@ function App() {
           <ArchiveModal
             isOpen={showArchive}
             onClose={() => setShowArchive(false)}
+          />
+        )}
+        {hasOpenedHistory && (
+          <HistoryModal
+            isOpen={showHistory}
+            onClose={() => setShowHistory(false)}
           />
         )}
       </Suspense>

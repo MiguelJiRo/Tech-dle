@@ -1,8 +1,17 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { saveGameState, loadGameState, saveStats, loadStats } from './storage';
+import {
+  saveGameState,
+  loadGameState,
+  saveStats,
+  loadStats,
+  loadHistory,
+  appendHistoryEntry,
+  HISTORY_LIMIT,
+} from './storage';
 
 const STORAGE_KEY = 'techdle-game-state';
 const STATS_KEY = 'techdle-stats';
+const HISTORY_KEY = 'techdle-history';
 
 const makeMemoryStorage = () => {
   const store = new Map();
@@ -91,5 +100,72 @@ describe('storage', () => {
     });
     expect(() => loadStats()).not.toThrow();
     expect(loadStats().gamesPlayed).toBe(0);
+  });
+});
+
+describe('history', () => {
+  let mem;
+  beforeEach(() => {
+    mem = makeMemoryStorage();
+    installStorage(mem);
+  });
+  afterEach(() => {
+    delete globalThis.localStorage;
+  });
+
+  const entry = (date, won, attempts = 3, targetName = 'JavaScript') => ({ date, targetName, attempts, won });
+
+  it('returns empty array when nothing stored', () => {
+    expect(loadHistory()).toEqual([]);
+  });
+
+  it('appendHistoryEntry stores and reads back', () => {
+    appendHistoryEntry(entry('2026-05-10', true));
+    expect(loadHistory()).toEqual([entry('2026-05-10', true)]);
+  });
+
+  it('newest entry comes first (LIFO)', () => {
+    appendHistoryEntry(entry('2026-05-09', true));
+    appendHistoryEntry(entry('2026-05-10', false, 6));
+    const h = loadHistory();
+    expect(h[0].date).toBe('2026-05-10');
+    expect(h[1].date).toBe('2026-05-09');
+  });
+
+  it('replaces an existing entry for the same date (idempotent)', () => {
+    appendHistoryEntry(entry('2026-05-10', false, 6));
+    appendHistoryEntry(entry('2026-05-10', true, 4, 'Python'));
+    const h = loadHistory();
+    expect(h.length).toBe(1);
+    expect(h[0]).toEqual(entry('2026-05-10', true, 4, 'Python'));
+  });
+
+  it('caps to HISTORY_LIMIT entries', () => {
+    for (let i = 0; i < HISTORY_LIMIT + 5; i++) {
+      const day = String(i + 1).padStart(2, '0');
+      appendHistoryEntry(entry(`2026-01-${day}`, true));
+    }
+    expect(loadHistory().length).toBe(HISTORY_LIMIT);
+  });
+
+  it('rejects malformed entries', () => {
+    expect(appendHistoryEntry({ date: '2026-05-10' })).toBe(false);
+    expect(appendHistoryEntry(null)).toBe(false);
+    expect(loadHistory()).toEqual([]);
+  });
+
+  it('filters out malformed entries on load', () => {
+    mem._store.set(HISTORY_KEY, JSON.stringify([
+      entry('2026-05-10', true),
+      { date: 'broken' },
+      'not an object',
+    ]));
+    expect(loadHistory()).toEqual([entry('2026-05-10', true)]);
+  });
+
+  it('returns empty array on corrupt JSON', () => {
+    mem._store.set(HISTORY_KEY, '{not json');
+    expect(() => loadHistory()).not.toThrow();
+    expect(loadHistory()).toEqual([]);
   });
 });

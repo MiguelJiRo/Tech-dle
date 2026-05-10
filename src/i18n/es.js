@@ -126,7 +126,17 @@ export default {
     maxStreak: "Mejor Racha",
     guessDistribution: "Distribución de Intentos",
     achievementsTitle: "Logros",
-    achievementsCount: "{n} de {total}"
+    achievementsCount: "{n} de {total}",
+    viewHistory: "Ver historial"
+  },
+
+  // History
+  history: {
+    title: "Historial",
+    empty: "Aún no hay partidas en tu historial.",
+    won: "Ganada",
+    lost: "Perdida",
+    attempts: "{n}/6"
   },
 
   // Achievements
