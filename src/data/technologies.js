@@ -330,16 +330,19 @@ export const technologies = [
   },
 ];
 
-export const getTechnologyOfTheDay = () => {
-  // Usar la fecha actual como seed para seleccionar la tecnología del día
-  const today = new Date();
-  const startDate = new Date('2024-01-01');
-  const daysSinceStart = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-  const index = daysSinceStart % technologies.length;
+const MS_PER_DAY = 86_400_000;
+const EPOCH_UTC = Date.UTC(2024, 0, 1);
+
+export const getTechnologyOfTheDay = (now = new Date()) => {
+  const todayUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const daysSinceStart = Math.floor((todayUtc - EPOCH_UTC) / MS_PER_DAY);
+  const index = ((daysSinceStart % technologies.length) + technologies.length) % technologies.length;
   return technologies[index];
 };
 
-export const getDateKey = () => {
-  const today = new Date();
-  return today.toISOString().split('T')[0];
+export const getDateKey = (now = new Date()) => {
+  const y = now.getUTCFullYear();
+  const m = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(now.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 };
