@@ -44,7 +44,9 @@ export default {
       dark: "Dark",
       light: "Light"
     },
-    themeHelp: "Follow your system preference or pick a fixed one."
+    themeHelp: "Follow your system preference or pick a fixed one.",
+    colorBlind: "Color-blind mode",
+    colorBlindHelp: "Add symbols to cells so the result is distinguishable without relying on color."
   },
 
   // Toasts

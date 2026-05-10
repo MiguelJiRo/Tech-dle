@@ -33,8 +33,23 @@ describe('settings storage', () => {
   });
 
   it('round-trips a valid theme', () => {
-    saveSettings({ theme: 'light' });
-    expect(loadSettings()).toEqual({ theme: 'light' });
+    saveSettings({ theme: 'light', colorBlind: false });
+    expect(loadSettings()).toEqual({ theme: 'light', colorBlind: false });
+  });
+
+  it('round-trips colorBlind enabled', () => {
+    saveSettings({ theme: 'dark', colorBlind: true });
+    expect(loadSettings()).toEqual({ theme: 'dark', colorBlind: true });
+  });
+
+  it('coerces non-boolean colorBlind to default false', () => {
+    mem._store.set(KEY, JSON.stringify({ theme: 'dark', colorBlind: 'yes' }));
+    expect(loadSettings()).toEqual({ theme: 'dark', colorBlind: false });
+  });
+
+  it('keeps a valid theme even when colorBlind is missing', () => {
+    mem._store.set(KEY, JSON.stringify({ theme: 'light' }));
+    expect(loadSettings()).toEqual({ theme: 'light', colorBlind: false });
   });
 
   it('rejects unknown theme values and falls back to default', () => {

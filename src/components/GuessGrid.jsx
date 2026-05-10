@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { MATCH_TYPES } from '../utils/gameLogic';
+import { MATCH_TYPES, matchSymbol } from '../utils/gameLogic';
 import { useLanguage } from '../i18n/useLanguage';
+import { useSettings } from '../settings/useSettings';
 
 const yearArrow = (yearComparison) => {
   if (!yearComparison) return '';
@@ -44,19 +45,27 @@ const buildRowSummary = (t, comparison) => {
   ].join('. ');
 };
 
-const Cell = ({ value, ariaLabel, color, animate, delayIndex, extra }) => (
+const Cell = ({ value, ariaLabel, color, animate, delayIndex, extra, badge }) => (
   <div
     role="cell"
     aria-label={ariaLabel}
-    className={`${color} rounded p-2 sm:p-3 min-h-16 sm:min-h-20 text-center flex flex-col justify-center items-center ${animate ? 'animate-[cell-flip_550ms_ease-out_both]' : ''}`}
+    className={`${color} relative rounded p-2 sm:p-3 min-h-16 sm:min-h-20 text-center flex flex-col justify-center items-center ${animate ? 'animate-[cell-flip_550ms_ease-out_both]' : ''}`}
     style={animate ? { animationDelay: `${delayIndex * 140}ms` } : undefined}
   >
+    {badge && (
+      <span
+        aria-hidden="true"
+        className="absolute top-1 right-1 text-[0.65rem] sm:text-xs font-bold leading-none bg-black/30 text-white rounded px-1 py-0.5 min-w-[1rem] text-center"
+      >
+        {badge}
+      </span>
+    )}
     <div className="font-bold text-xs sm:text-sm break-words leading-tight">{value}</div>
     {extra}
   </div>
 );
 
-const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded }) => {
+const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded, colorBlind }) => {
   const { t } = useLanguage();
 
   if (!comparison) {
@@ -91,6 +100,7 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded }) => {
         ariaLabel={`${t('grid.year')} ${tech.year}, ${matchLabel(t, comparison.year.match)}`}
         animate={isJustAdded}
         delayIndex={1}
+        badge={colorBlind ? matchSymbol(comparison.year.match) : null}
         extra={<div className="text-base sm:text-lg leading-none mt-0.5" aria-hidden="true">{yearArrow(comparison.year)}</div>}
       />
       <Cell
@@ -99,6 +109,7 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded }) => {
         ariaLabel={`${t('grid.type')} ${t(`techTypes.${tech.type}`)}, ${matchLabel(t, comparison.type)}`}
         animate={isJustAdded}
         delayIndex={2}
+        badge={colorBlind ? matchSymbol(comparison.type) : null}
       />
       <Cell
         color={cellColor(comparison.paradigm)}
@@ -106,6 +117,7 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded }) => {
         ariaLabel={`${t('grid.paradigm')} ${t(`paradigms.${tech.paradigm}`)}, ${matchLabel(t, comparison.paradigm)}`}
         animate={isJustAdded}
         delayIndex={3}
+        badge={colorBlind ? matchSymbol(comparison.paradigm) : null}
       />
       <Cell
         color={cellColor(comparison.typing)}
@@ -113,6 +125,7 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded }) => {
         ariaLabel={`${t('grid.typing')} ${t(`typings.${tech.typing}`)}, ${matchLabel(t, comparison.typing)}`}
         animate={isJustAdded}
         delayIndex={4}
+        badge={colorBlind ? matchSymbol(comparison.typing) : null}
       />
     </div>
   );
@@ -120,6 +133,8 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded }) => {
 
 const GuessGrid = ({ guesses, maxGuesses = 6 }) => {
   const { t } = useLanguage();
+  const { settings } = useSettings();
+  const colorBlind = settings.colorBlind;
   const [prevCount, setPrevCount] = useState(guesses.length);
   const [justAddedIndex, setJustAddedIndex] = useState(-1);
 
@@ -152,6 +167,7 @@ const GuessGrid = ({ guesses, maxGuesses = 6 }) => {
           rowIndex={i}
           totalRows={maxGuesses}
           isJustAdded={i === justAddedIndex}
+          colorBlind={colorBlind}
         />
       ))}
 
