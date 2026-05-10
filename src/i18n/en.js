@@ -126,7 +126,17 @@ export default {
     maxStreak: "Max Streak",
     guessDistribution: "Guess Distribution",
     achievementsTitle: "Achievements",
-    achievementsCount: "{n} of {total}"
+    achievementsCount: "{n} of {total}",
+    viewHistory: "View history"
+  },
+
+  // History
+  history: {
+    title: "History",
+    empty: "No games in your history yet.",
+    won: "Won",
+    lost: "Lost",
+    attempts: "{n}/6"
   },
 
   // Achievements

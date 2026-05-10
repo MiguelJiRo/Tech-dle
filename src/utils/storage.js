@@ -1,6 +1,9 @@
 const STORAGE_KEY = 'techdle-game-state';
 const STATS_KEY = 'techdle-stats';
 const ACHIEVEMENTS_KEY = 'techdle-achievements';
+const HISTORY_KEY = 'techdle-history';
+
+export const HISTORY_LIMIT = 60;
 
 export const sharedStorageKey = (dateKey) => `${STORAGE_KEY}-shared-${dateKey}`;
 
@@ -96,3 +99,31 @@ export const loadAchievements = () => {
 };
 
 export const saveAchievements = (ids) => safeSetItem(ACHIEVEMENTS_KEY, JSON.stringify(ids));
+
+const isHistoryEntry = (e) =>
+  e && typeof e === 'object'
+  && typeof e.date === 'string'
+  && typeof e.targetName === 'string'
+  && Number.isFinite(e.attempts)
+  && typeof e.won === 'boolean';
+
+export const loadHistory = () => {
+  const saved = safeGetItem(HISTORY_KEY);
+  if (!saved) return [];
+  try {
+    const parsed = JSON.parse(saved);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(isHistoryEntry);
+  } catch {
+    return [];
+  }
+};
+
+export const appendHistoryEntry = (entry) => {
+  if (!isHistoryEntry(entry)) return false;
+  const current = loadHistory();
+  // Replace any existing entry for the same date (idempotent), then unshift the new one.
+  const filtered = current.filter((e) => e.date !== entry.date);
+  const next = [entry, ...filtered].slice(0, HISTORY_LIMIT);
+  return safeSetItem(HISTORY_KEY, JSON.stringify(next));
+};
