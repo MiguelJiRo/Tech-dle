@@ -45,6 +45,18 @@ export default {
     copyFailed: "Could not copy results"
   },
 
+  // Archive
+  archive: {
+    title: "Puzzle archive",
+    open: "Open archive",
+    help: "Play puzzles from previous days. They don't count toward your daily stats.",
+    random: "Play a random one",
+    empty: "No past puzzles available yet.",
+    wonShort: "Won in {n}",
+    lostShort: "Lost",
+    inProgressShort: "In progress"
+  },
+
   // Settings
   settings: {
     title: "Settings",
