@@ -1,5 +1,6 @@
 const STORAGE_KEY = 'techdle-game-state';
 const STATS_KEY = 'techdle-stats';
+const ACHIEVEMENTS_KEY = 'techdle-achievements';
 
 export const sharedStorageKey = (dateKey) => `${STORAGE_KEY}-shared-${dateKey}`;
 
@@ -81,3 +82,17 @@ export const loadStats = () => {
     return { ...DEFAULT_STATS };
   }
 };
+
+export const loadAchievements = () => {
+  const saved = safeGetItem(ACHIEVEMENTS_KEY);
+  if (!saved) return [];
+  try {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed)) return parsed.filter((id) => typeof id === 'string');
+    return [];
+  } catch {
+    return [];
+  }
+};
+
+export const saveAchievements = (ids) => safeSetItem(ACHIEVEMENTS_KEY, JSON.stringify(ids));
