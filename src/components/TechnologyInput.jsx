@@ -1,33 +1,32 @@
-import { useState, useEffect, useRef } from 'react';
+import { useMemo, useState, useRef } from 'react';
 import { useLanguage } from '../i18n/useLanguage';
 
 const TechnologyInput = ({ technologies, onGuess, disabled }) => {
   const { t } = useLanguage();
   const [input, setInput] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [lastInput, setLastInput] = useState('');
+  const [isOpen, setIsOpen] = useState(true);
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    if (input.trim() === '') {
-      setSuggestions([]);
-      return;
-    }
-
-    const filtered = technologies.filter(tech =>
-      tech.name.toLowerCase().includes(input.toLowerCase())
-    ).slice(0, 5);
-
-    setSuggestions(filtered);
-    setSelectedIndex(-1);
+  const suggestions = useMemo(() => {
+    if (input.trim() === '') return [];
+    const needle = input.toLowerCase();
+    return technologies.filter(tech => tech.name.toLowerCase().includes(needle)).slice(0, 5);
   }, [input, technologies]);
+
+  if (input !== lastInput) {
+    setLastInput(input);
+    setSelectedIndex(-1);
+    setIsOpen(true);
+  }
 
   const handleSubmit = (technology) => {
     if (technology && !disabled) {
       onGuess(technology);
       setInput('');
-      setSuggestions([]);
       setSelectedIndex(-1);
+      setIsOpen(true);
     }
   };
 
@@ -50,7 +49,7 @@ const TechnologyInput = ({ technologies, onGuess, disabled }) => {
         handleSubmit(suggestions[0]);
       }
     } else if (e.key === 'Escape') {
-      setSuggestions([]);
+      setIsOpen(false);
       setSelectedIndex(-1);
     }
   };
@@ -68,7 +67,7 @@ const TechnologyInput = ({ technologies, onGuess, disabled }) => {
         className="w-full px-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
       />
 
-      {suggestions.length > 0 && !disabled && (
+      {isOpen && suggestions.length > 0 && !disabled && (
         <div className="absolute z-10 w-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
           {suggestions.map((tech, index) => (
             <button
