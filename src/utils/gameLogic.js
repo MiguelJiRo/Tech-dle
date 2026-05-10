@@ -6,6 +6,8 @@ export const MATCH_TYPES = {
   LOWER: 'lower',
 };
 
+const MULTI = 'Multi-paradigma';
+
 export const compareYear = (guessYear, targetYear) => {
   if (guessYear === targetYear) {
     return { match: MATCH_TYPES.CORRECT };
@@ -20,8 +22,7 @@ export const compareField = (guessValue, targetValue) => {
   if (guessValue === targetValue) {
     return MATCH_TYPES.CORRECT;
   }
-  // Para paradigmas que pueden tener múltiples valores
-  if (guessValue.includes('Multi-paradigma') || targetValue.includes('Multi-paradigma')) {
+  if (guessValue === MULTI || targetValue === MULTI) {
     return MATCH_TYPES.PARTIAL;
   }
   return MATCH_TYPES.INCORRECT;
@@ -30,6 +31,7 @@ export const compareField = (guessValue, targetValue) => {
 export const compareTechnologies = (guess, target) => {
   return {
     technology: guess,
+    isTarget: guess.id === target.id,
     year: compareYear(guess.year, target.year),
     type: compareField(guess.type, target.type),
     paradigm: compareField(guess.paradigm, target.paradigm),
@@ -37,11 +39,4 @@ export const compareTechnologies = (guess, target) => {
   };
 };
 
-export const hasWon = (comparison) => {
-  return (
-    comparison.year.match === MATCH_TYPES.CORRECT &&
-    comparison.type === MATCH_TYPES.CORRECT &&
-    comparison.paradigm === MATCH_TYPES.CORRECT &&
-    comparison.typing === MATCH_TYPES.CORRECT
-  );
-};
+export const hasWon = (comparison) => comparison.isTarget === true;
