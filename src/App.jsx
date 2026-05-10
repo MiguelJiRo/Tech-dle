@@ -3,6 +3,7 @@ import { technologies, getTechnologyOfTheDay, getDateKey } from './data/technolo
 import { compareTechnologies, hasWon } from './utils/gameLogic';
 import { saveGameState, loadGameState, saveStats, loadStats } from './utils/storage';
 import { useLanguage } from './i18n/useLanguage';
+import { useToast } from './toast/useToast';
 import Header from './components/Header';
 import GuessGrid from './components/GuessGrid';
 import TechnologyInput from './components/TechnologyInput';
@@ -15,6 +16,7 @@ const logo = '/logo.png';
 
 function App() {
   const { t } = useLanguage();
+  const toast = useToast();
   const [targetTechnology, setTargetTechnology] = useState(null);
   const [guesses, setGuesses] = useState([]);
   const [gameOver, setGameOver] = useState(false);
@@ -64,10 +66,15 @@ function App() {
   }, [guesses, gameOver, gameWon, currentDate, targetTechnology]);
 
   const handleGuess = (technology) => {
-    if (gameOver || !targetTechnology) return;
+    if (!targetTechnology) return;
 
-    // Evitar duplicados
+    if (gameOver) {
+      toast.info(t('toast.gameAlreadyOver'));
+      return;
+    }
+
     if (guesses.some(g => g.technology.id === technology.id)) {
+      toast.error(t('toast.duplicateGuess'));
       return;
     }
 

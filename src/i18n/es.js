@@ -30,7 +30,14 @@ export default {
     gameOver: "Game Over",
     correctAnswer: "La tecnología era:",
     shareResults: "Compartir Resultados",
-    resultsCopied: "Resultados copiados al portapapeles"
+    resultsCopied: "Resultados copiados al portapapeles",
+    copyFailed: "No se pudieron copiar los resultados"
+  },
+
+  // Toasts
+  toast: {
+    duplicateGuess: "Ya has probado esa tecnología",
+    gameAlreadyOver: "La partida ya ha terminado"
   },
 
   // Color Guide
