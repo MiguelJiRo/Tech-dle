@@ -11,26 +11,22 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
 
   const maxGuessCount = Math.max(...stats.guessDistribution, 1);
 
+  const yearEmoji = (m) => {
+    if (m === 'correct') return '🟩';
+    if (m === 'partial') return '🟨';
+    if (m === 'higher' || m === 'lower') return '🟧';
+    return '⬛';
+  };
+  const fieldEmoji = (m) => {
+    if (m === 'correct') return '🟩';
+    if (m === 'partial') return '🟨';
+    return '⬛';
+  };
+
   const copyResults = () => {
-    const emojiGrid = gameState.guesses.map(guess => {
-      const emojis = [];
-      // Year
-      if (guess.year.match === 'correct') emojis.push('🟩');
-      else emojis.push('🟧');
-      // Type
-      if (guess.type === 'correct') emojis.push('🟩');
-      else if (guess.type === 'partial') emojis.push('🟨');
-      else emojis.push('⬛');
-      // Paradigm
-      if (guess.paradigm === 'correct') emojis.push('🟩');
-      else if (guess.paradigm === 'partial') emojis.push('🟨');
-      else emojis.push('⬛');
-      // Typing
-      if (guess.typing === 'correct') emojis.push('🟩');
-      else if (guess.typing === 'partial') emojis.push('🟨');
-      else emojis.push('⬛');
-      return emojis.join('');
-    }).join('\n');
+    const emojiGrid = gameState.guesses.map(guess =>
+      yearEmoji(guess.year.match) + fieldEmoji(guess.type) + fieldEmoji(guess.paradigm) + fieldEmoji(guess.typing)
+    ).join('\n');
 
     const text = `Tech-dle ${gameState.guesses.length}/6\n\n${emojiGrid}\n\nhttps://tech-dle.vercel.app`;
     navigator.clipboard.writeText(text)

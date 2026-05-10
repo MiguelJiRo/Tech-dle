@@ -66,6 +66,10 @@ export default {
       higher: "correct year is later",
       lower: "correct year is earlier",
       incorrect: "no match"
+    },
+    proximity: {
+      near: "very close",
+      remote: "far off"
     }
   },
 
@@ -74,8 +78,8 @@ export default {
     title: "Color Guide",
     correct: "Exact match",
     partial: "Partial match",
-    yearWrong: "Wrong year (↑ higher / ↓ lower)",
-    incorrect: "No match"
+    yearWrong: "Year nearby or off (↑ higher / ↓ lower)",
+    incorrect: "No match or year far off"
   },
 
   // Stats Modal
@@ -102,9 +106,9 @@ export default {
     colorsTitle: "Colors:",
     colors: {
       green: "Exact match",
-      yellow: "Partial match (e.g., Multi-paradigm)",
-      orange: "Wrong year (↑ correct year is higher / ↓ lower)",
-      gray: "No match"
+      yellow: "Partial match (e.g., Multi-paradigm) or year within 5 years",
+      orange: "Year off by 6 to 20 years (↑ correct is higher / ↓ lower)",
+      gray: "No match, or year more than 20 years off"
     },
     tip: "Tip:",
     tipText: "Use the search box to find available technologies. It will update automatically as you type.",
