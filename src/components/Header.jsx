@@ -1,15 +1,84 @@
+import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../i18n/useLanguage';
+import { SUPPORTED_LANGUAGES } from '../i18n/languages';
 
 const logo = '/logo.png';
 
 const iconBtn = 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors p-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500';
 
-const Header = ({ onOpenStats, onOpenHelp, onOpenSettings, onOpenArchive }) => {
-  const { language, changeLanguage, t } = useLanguage();
+const LanguageMenu = () => {
+  const { language, changeLanguage } = useLanguage();
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef(null);
 
-  const toggleLanguage = () => {
-    changeLanguage(language === 'es' ? 'en' : 'es');
-  };
+  useEffect(() => {
+    if (!open) return undefined;
+    const handlePointer = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) setOpen(false);
+    };
+    const handleKey = (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', handlePointer);
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.removeEventListener('mousedown', handlePointer);
+      document.removeEventListener('keydown', handleKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={`${iconBtn} font-semibold text-sm`}
+        title="Change language"
+        aria-label="Change language"
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
+        <div className="flex items-center gap-1">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+          </svg>
+          <span className="uppercase">{language}</span>
+        </div>
+      </button>
+      {open && (
+        <ul
+          role="menu"
+          className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-1 z-40"
+        >
+          {SUPPORTED_LANGUAGES.map((lang) => {
+            const active = lang.code === language;
+            return (
+              <li key={lang.code} role="none">
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={active}
+                  onClick={() => { changeLanguage(lang.code); setOpen(false); }}
+                  className={`w-full flex items-center justify-between gap-3 px-3 py-2 text-sm text-left transition-colors ${
+                    active
+                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 font-semibold'
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/60'
+                  }`}
+                >
+                  <span>{lang.nativeName}</span>
+                  <span className="text-xs uppercase text-gray-500 dark:text-gray-400">{lang.code}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+const Header = ({ onOpenStats, onOpenHelp, onOpenSettings, onOpenArchive }) => {
+  const { t } = useLanguage();
 
   return (
     <header className="border-b border-gray-200 dark:border-gray-800/80 bg-white/70 dark:bg-gray-900/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-900/60 sticky top-0 z-30 mb-8">
@@ -66,20 +135,8 @@ const Header = ({ onOpenStats, onOpenHelp, onOpenSettings, onOpenArchive }) => {
           </h1>
         </a>
 
-        <div className="flex gap-1 sm:gap-2">
-          <button
-            onClick={toggleLanguage}
-            className={`${iconBtn} font-semibold text-sm`}
-            title="Change language"
-            aria-label="Change language"
-          >
-            <div className="flex items-center gap-1">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-              </svg>
-              <span className="uppercase">{language}</span>
-            </div>
-          </button>
+        <div className="flex gap-1 sm:gap-2 items-center">
+          <LanguageMenu />
 
           <button
             onClick={onOpenStats}
