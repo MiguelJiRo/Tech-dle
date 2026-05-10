@@ -10,7 +10,15 @@ export default {
     loading: "Loading...",
     guessPlaceholder: "Type a technology name...",
     attemptsLeft: "Attempts left",
-    newTechAvailable: "A new technology will be available tomorrow"
+    newTechAvailable: "A new technology will be available tomorrow",
+    revealHint: "Reveal a hint",
+    hintLabel: "Hint",
+    hintTypeLabel: {
+      type: "The type is",
+      paradigm: "The paradigm is",
+      typing: "The typing is"
+    },
+    noMoreHints: "No more hints to reveal"
   },
 
   // Grid

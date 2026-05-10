@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { technologies, getTechnologyOfTheDay, getDateKey } from './data/technologies';
-import { compareTechnologies, hasWon, computeHardModeConstraints, validateHardModeGuess } from './utils/gameLogic';
+import { compareTechnologies, hasWon, computeHardModeConstraints, validateHardModeGuess, pickHint, availableHintFields } from './utils/gameLogic';
 import { saveGameState, loadGameState, saveStats, loadStats } from './utils/storage';
 import { useLanguage } from './i18n/useLanguage';
 import { useToast } from './toast/useToast';
@@ -17,6 +17,7 @@ import GuessGrid from './components/GuessGrid';
 import TechnologyInput from './components/TechnologyInput';
 import ColorGuide from './components/ColorGuide';
 import Footer from './components/Footer';
+import HintPanel, { MAX_HINTS } from './components/HintPanel';
 
 const StatsModal = lazy(() => import('./components/StatsModal'));
 const HelpModal = lazy(() => import('./components/HelpModal'));
@@ -35,6 +36,7 @@ const initializeGameState = () => {
     guesses: resume ? saved.guesses : [],
     gameOver: resume ? saved.gameOver : false,
     gameWon: resume ? saved.gameWon : false,
+    revealedHints: resume && Array.isArray(saved.revealedHints) ? saved.revealedHints : [],
     autoOpenStats: Boolean(resume && saved.gameOver),
   };
 };
@@ -48,6 +50,7 @@ function App() {
   const [guesses, setGuesses] = useState(initialState.guesses);
   const [gameOver, setGameOver] = useState(initialState.gameOver);
   const [gameWon, setGameWon] = useState(initialState.gameWon);
+  const [revealedHints, setRevealedHints] = useState(initialState.revealedHints);
   const [stats, setStats] = useState(loadStats);
   const [showStats, setShowStats] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -59,6 +62,18 @@ function App() {
   const openStats = () => { setHasOpenedStats(true); setShowStats(true); };
   const openHelp = () => { setHasOpenedHelp(true); setShowHelp(true); };
   const openSettings = () => { setHasOpenedSettings(true); setShowSettings(true); };
+
+  const revealHint = () => {
+    if (gameOver || revealedHints.length >= MAX_HINTS) return;
+    const hint = pickHint(targetTechnology, guesses, revealedHints);
+    if (!hint) {
+      toast.info(t('game.noMoreHints'));
+      return;
+    }
+    setRevealedHints((prev) => [...prev, hint]);
+  };
+
+  const canRevealMore = availableHintFields(guesses, revealedHints).length > 0;
 
   // Auto-abrir el modal de stats si el juego ya estaba terminado al cargar
   useEffect(() => {
@@ -75,11 +90,12 @@ function App() {
         guesses,
         gameOver,
         gameWon,
+        revealedHints,
         targetTechnology,
       };
       saveGameState(gameState);
     }
-  }, [guesses, gameOver, gameWon, currentDate, targetTechnology]);
+  }, [guesses, gameOver, gameWon, revealedHints, currentDate, targetTechnology]);
 
   const handleGuess = (technology) => {
     if (!targetTechnology) return;
@@ -185,6 +201,14 @@ function App() {
             disabled={gameOver}
           />
         )}
+
+        <HintPanel
+          guesses={guesses}
+          gameOver={gameOver}
+          revealedHints={revealedHints}
+          onReveal={revealHint}
+          canReveal={canRevealMore}
+        />
 
         {gameOver && (
           <div className="text-center mb-6" role="status" aria-live="polite">
