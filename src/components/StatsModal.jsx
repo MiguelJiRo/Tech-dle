@@ -1,8 +1,10 @@
 import Modal from './Modal';
 import { useLanguage } from '../i18n/useLanguage';
+import { useToast } from '../toast/useToast';
 
 const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
   const { t } = useLanguage();
+  const toast = useToast();
   const winPercentage = stats.gamesPlayed > 0
     ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
     : 0;
@@ -31,8 +33,9 @@ const StatsModal = ({ isOpen, onClose, stats, gameState }) => {
     }).join('\n');
 
     const text = `Tech-dle ${gameState.guesses.length}/6\n\n${emojiGrid}\n\nhttps://tech-dle.vercel.app`;
-    navigator.clipboard.writeText(text);
-    alert(t('results.resultsCopied'));
+    navigator.clipboard.writeText(text)
+      .then(() => toast.success(t('results.resultsCopied')))
+      .catch(() => toast.error(t('results.copyFailed')));
   };
 
   return (
