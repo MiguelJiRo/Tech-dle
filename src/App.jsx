@@ -15,14 +15,30 @@ const HelpModal = lazy(() => import('./components/HelpModal'));
 
 const logo = '/logo.png';
 
+const initializeGameState = () => {
+  const dateKey = getDateKey();
+  const target = getTechnologyOfTheDay();
+  const saved = loadGameState();
+  const resume = saved && saved.date === dateKey;
+  return {
+    targetTechnology: target,
+    currentDate: dateKey,
+    guesses: resume ? saved.guesses : [],
+    gameOver: resume ? saved.gameOver : false,
+    gameWon: resume ? saved.gameWon : false,
+    autoOpenStats: Boolean(resume && saved.gameOver),
+  };
+};
+
 function App() {
   const { t } = useLanguage();
   const toast = useToast();
-  const [targetTechnology, setTargetTechnology] = useState(null);
-  const [guesses, setGuesses] = useState([]);
-  const [gameOver, setGameOver] = useState(false);
-  const [gameWon, setGameWon] = useState(false);
-  const [stats, setStats] = useState(loadStats());
+  const [initialState] = useState(initializeGameState);
+  const { targetTechnology, currentDate, autoOpenStats } = initialState;
+  const [guesses, setGuesses] = useState(initialState.guesses);
+  const [gameOver, setGameOver] = useState(initialState.gameOver);
+  const [gameWon, setGameWon] = useState(initialState.gameWon);
+  const [stats, setStats] = useState(loadStats);
   const [showStats, setShowStats] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [hasOpenedStats, setHasOpenedStats] = useState(false);
@@ -30,32 +46,13 @@ function App() {
 
   const openStats = () => { setHasOpenedStats(true); setShowStats(true); };
   const openHelp = () => { setHasOpenedHelp(true); setShowHelp(true); };
-  const [currentDate] = useState(getDateKey());
 
-  // Inicializar el juego
+  // Auto-abrir el modal de stats si el juego ya estaba terminado al cargar
   useEffect(() => {
-    const dateKey = getDateKey();
-    const target = getTechnologyOfTheDay();
-    setTargetTechnology(target);
-
-    // Cargar estado guardado
-    const savedState = loadGameState();
-    if (savedState && savedState.date === dateKey) {
-      setGuesses(savedState.guesses);
-      setGameOver(savedState.gameOver);
-      setGameWon(savedState.gameWon);
-
-      // Mostrar stats automáticamente si el juego terminó
-      if (savedState.gameOver) {
-        setTimeout(() => { setHasOpenedStats(true); setShowStats(true); }, 500);
-      }
-    } else {
-      // Nuevo día, limpiar estado
-      setGuesses([]);
-      setGameOver(false);
-      setGameWon(false);
-    }
-  }, []);
+    if (!autoOpenStats) return undefined;
+    const id = setTimeout(() => { setHasOpenedStats(true); setShowStats(true); }, 500);
+    return () => clearTimeout(id);
+  }, [autoOpenStats]);
 
   // Guardar estado cuando cambie
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { MATCH_TYPES } from '../utils/gameLogic';
 import { useLanguage } from '../i18n/useLanguage';
 
@@ -120,12 +120,13 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded }) => {
 
 const GuessGrid = ({ guesses, maxGuesses = 6 }) => {
   const { t } = useLanguage();
-  const prevCountRef = useRef(guesses.length);
-  const justAddedIndex = guesses.length > prevCountRef.current ? guesses.length - 1 : -1;
+  const [prevCount, setPrevCount] = useState(guesses.length);
+  const [justAddedIndex, setJustAddedIndex] = useState(-1);
 
-  useEffect(() => {
-    prevCountRef.current = guesses.length;
-  }, [guesses.length]);
+  if (guesses.length !== prevCount) {
+    setPrevCount(guesses.length);
+    setJustAddedIndex(guesses.length > prevCount ? guesses.length - 1 : -1);
+  }
 
   const rows = [...Array(maxGuesses)].map((_, i) => guesses[i] || null);
   const lastGuess = guesses[guesses.length - 1];
