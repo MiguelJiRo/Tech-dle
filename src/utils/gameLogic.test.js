@@ -5,6 +5,8 @@ import {
   compareField,
   compareTechnologies,
   hasWon,
+  computeHardModeConstraints,
+  validateHardModeGuess,
 } from './gameLogic';
 
 const js = { id: 1, name: 'JavaScript', year: 1995, type: 'Lenguaje', paradigm: 'Multi-paradigma', typing: 'Dinámico' };
@@ -78,5 +80,85 @@ describe('hasWon', () => {
   });
   it('returns false even when haskell vs java share year-adjacent attrs', () => {
     expect(hasWon(compareTechnologies(haskell, java))).toBe(false);
+  });
+});
+
+describe('hard mode', () => {
+  // Target: 2010, Lenguaje, Multi-paradigma, Estatico
+  const target = { id: 100, name: 'Target', year: 2010, type: 'Lenguaje', paradigm: 'Multi-paradigma', typing: 'Estático' };
+
+  describe('computeHardModeConstraints', () => {
+    it('no guesses -> open bounds and no required fields', () => {
+      const c = computeHardModeConstraints([]);
+      expect(c.minYear).toBe(-Infinity);
+      expect(c.maxYear).toBe(Infinity);
+      expect(c.requiredType).toBeNull();
+      expect(c.requiredParadigm).toBeNull();
+      expect(c.requiredTyping).toBeNull();
+    });
+
+    it('higher direction sets minYear above the guess year', () => {
+      const guess = { ...js, year: 1995 };
+      const cmp = compareTechnologies(guess, target);
+      const c = computeHardModeConstraints([cmp]);
+      expect(c.minYear).toBe(1996);
+      expect(c.maxYear).toBe(Infinity);
+    });
+
+    it('lower direction sets maxYear below the guess year', () => {
+      const guess = { ...js, year: 2025 };
+      const cmp = compareTechnologies(guess, target);
+      const c = computeHardModeConstraints([cmp]);
+      expect(c.maxYear).toBe(2024);
+    });
+
+    it('CORRECT field locks the requiredXxx', () => {
+      const guess = { ...js, type: 'Lenguaje' };
+      const cmp = compareTechnologies(guess, target);
+      const c = computeHardModeConstraints([cmp]);
+      expect(c.requiredType).toBe('Lenguaje');
+    });
+
+    it('combines multiple guesses (tightest bounds win)', () => {
+      const cmps = [
+        compareTechnologies({ ...js, year: 1990 }, target),
+        compareTechnologies({ ...js, year: 2020 }, target),
+      ];
+      const c = computeHardModeConstraints(cmps);
+      expect(c.minYear).toBe(1991);
+      expect(c.maxYear).toBe(2019);
+    });
+  });
+
+  describe('validateHardModeGuess', () => {
+    it('passes when no constraints', () => {
+      expect(validateHardModeGuess(js, computeHardModeConstraints([]))).toEqual({ valid: true });
+    });
+
+    it('rejects year below minYear', () => {
+      const c = { minYear: 2000, maxYear: Infinity, requiredType: null, requiredParadigm: null, requiredTyping: null };
+      const r = validateHardModeGuess({ ...js, year: 1999 }, c);
+      expect(r.valid).toBe(false);
+      expect(r.reason).toBe('minYear');
+      expect(r.expected).toBe(2000);
+    });
+
+    it('rejects year above maxYear', () => {
+      const c = { minYear: -Infinity, maxYear: 2010, requiredType: null, requiredParadigm: null, requiredTyping: null };
+      expect(validateHardModeGuess({ ...js, year: 2015 }, c).reason).toBe('maxYear');
+    });
+
+    it('rejects mismatched required type', () => {
+      const c = { minYear: -Infinity, maxYear: Infinity, requiredType: 'Lenguaje', requiredParadigm: null, requiredTyping: null };
+      const r = validateHardModeGuess({ ...js, type: 'Framework' }, c);
+      expect(r.valid).toBe(false);
+      expect(r.reason).toBe('type');
+      expect(r.expected).toBe('Lenguaje');
+    });
+
+    it('passes when all constraints satisfied', () => {
+      const c = { minYear: 1990, maxYear: 2020, requiredType: 'Lenguaje', requiredParadigm: null, requiredTyping: null };
+      expect(validateHardModeGuess({ ...js, year: 2000, type: 'Lenguaje' }, c)).toEqual({ valid: true });
+    });
   });
 });

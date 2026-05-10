@@ -33,23 +33,33 @@ describe('settings storage', () => {
   });
 
   it('round-trips a valid theme', () => {
-    saveSettings({ theme: 'light', colorBlind: false });
-    expect(loadSettings()).toEqual({ theme: 'light', colorBlind: false });
+    saveSettings({ theme: 'light', colorBlind: false, hardMode: false });
+    expect(loadSettings()).toEqual({ theme: 'light', colorBlind: false, hardMode: false });
   });
 
   it('round-trips colorBlind enabled', () => {
-    saveSettings({ theme: 'dark', colorBlind: true });
-    expect(loadSettings()).toEqual({ theme: 'dark', colorBlind: true });
+    saveSettings({ theme: 'dark', colorBlind: true, hardMode: false });
+    expect(loadSettings()).toEqual({ theme: 'dark', colorBlind: true, hardMode: false });
+  });
+
+  it('round-trips hardMode enabled', () => {
+    saveSettings({ theme: 'dark', colorBlind: false, hardMode: true });
+    expect(loadSettings().hardMode).toBe(true);
   });
 
   it('coerces non-boolean colorBlind to default false', () => {
     mem._store.set(KEY, JSON.stringify({ theme: 'dark', colorBlind: 'yes' }));
-    expect(loadSettings()).toEqual({ theme: 'dark', colorBlind: false });
+    expect(loadSettings()).toEqual({ theme: 'dark', colorBlind: false, hardMode: false });
+  });
+
+  it('coerces non-boolean hardMode to default false', () => {
+    mem._store.set(KEY, JSON.stringify({ theme: 'dark', hardMode: 'true' }));
+    expect(loadSettings().hardMode).toBe(false);
   });
 
   it('keeps a valid theme even when colorBlind is missing', () => {
     mem._store.set(KEY, JSON.stringify({ theme: 'light' }));
-    expect(loadSettings()).toEqual({ theme: 'light', colorBlind: false });
+    expect(loadSettings()).toEqual({ theme: 'light', colorBlind: false, hardMode: false });
   });
 
   it('rejects unknown theme values and falls back to default', () => {

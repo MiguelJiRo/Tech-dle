@@ -46,13 +46,22 @@ export default {
     },
     themeHelp: "Sigue la preferencia del sistema, o fija uno fijo.",
     colorBlind: "Modo daltónico",
-    colorBlindHelp: "Añade símbolos a las celdas para distinguir el resultado sin depender del color."
+    colorBlindHelp: "Añade símbolos a las celdas para distinguir el resultado sin depender del color.",
+    hardMode: "Modo difícil",
+    hardModeHelp: "Tus siguientes intentos deben respetar las pistas previas (rangos de año y campos confirmados)."
   },
 
   // Toasts
   toast: {
     duplicateGuess: "Ya has probado esa tecnología",
-    gameAlreadyOver: "La partida ya ha terminado"
+    gameAlreadyOver: "La partida ya ha terminado",
+    hardMode: {
+      minYear: "Modo difícil: el año debe ser ≥ {value}",
+      maxYear: "Modo difícil: el año debe ser ≤ {value}",
+      type: "Modo difícil: el tipo debe ser {value}",
+      paradigm: "Modo difícil: el paradigma debe ser {value}",
+      typing: "Modo difícil: el tipado debe ser {value}"
+    }
   },
 
   // Accesibilidad

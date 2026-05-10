@@ -53,6 +53,51 @@ export const compareTechnologies = (guess, target) => {
 
 export const hasWon = (comparison) => comparison.isTarget === true;
 
+export const computeHardModeConstraints = (guesses) => {
+  let minYear = -Infinity;
+  let maxYear = Infinity;
+  let requiredType = null;
+  let requiredParadigm = null;
+  let requiredTyping = null;
+
+  for (const guess of guesses) {
+    const techYear = guess.technology.year;
+    if (guess.year.match === MATCH_TYPES.CORRECT) {
+      minYear = Math.max(minYear, techYear);
+      maxYear = Math.min(maxYear, techYear);
+    } else if (guess.year.direction === 'higher') {
+      minYear = Math.max(minYear, techYear + 1);
+    } else if (guess.year.direction === 'lower') {
+      maxYear = Math.min(maxYear, techYear - 1);
+    }
+
+    if (guess.type === MATCH_TYPES.CORRECT) requiredType = guess.technology.type;
+    if (guess.paradigm === MATCH_TYPES.CORRECT) requiredParadigm = guess.technology.paradigm;
+    if (guess.typing === MATCH_TYPES.CORRECT) requiredTyping = guess.technology.typing;
+  }
+
+  return { minYear, maxYear, requiredType, requiredParadigm, requiredTyping };
+};
+
+export const validateHardModeGuess = (technology, constraints) => {
+  if (technology.year < constraints.minYear) {
+    return { valid: false, reason: 'minYear', expected: constraints.minYear };
+  }
+  if (technology.year > constraints.maxYear) {
+    return { valid: false, reason: 'maxYear', expected: constraints.maxYear };
+  }
+  if (constraints.requiredType && technology.type !== constraints.requiredType) {
+    return { valid: false, reason: 'type', expected: constraints.requiredType };
+  }
+  if (constraints.requiredParadigm && technology.paradigm !== constraints.requiredParadigm) {
+    return { valid: false, reason: 'paradigm', expected: constraints.requiredParadigm };
+  }
+  if (constraints.requiredTyping && technology.typing !== constraints.requiredTyping) {
+    return { valid: false, reason: 'typing', expected: constraints.requiredTyping };
+  }
+  return { valid: true };
+};
+
 export const matchSymbol = (match) => {
   switch (match) {
     case MATCH_TYPES.CORRECT: return '✓';

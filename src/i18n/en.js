@@ -46,13 +46,22 @@ export default {
     },
     themeHelp: "Follow your system preference or pick a fixed one.",
     colorBlind: "Color-blind mode",
-    colorBlindHelp: "Add symbols to cells so the result is distinguishable without relying on color."
+    colorBlindHelp: "Add symbols to cells so the result is distinguishable without relying on color.",
+    hardMode: "Hard mode",
+    hardModeHelp: "Future guesses must honor previous hints (year ranges and confirmed fields)."
   },
 
   // Toasts
   toast: {
     duplicateGuess: "You already tried that technology",
-    gameAlreadyOver: "The game is already over"
+    gameAlreadyOver: "The game is already over",
+    hardMode: {
+      minYear: "Hard mode: year must be ≥ {value}",
+      maxYear: "Hard mode: year must be ≤ {value}",
+      type: "Hard mode: type must be {value}",
+      paradigm: "Hard mode: paradigm must be {value}",
+      typing: "Hard mode: typing must be {value}"
+    }
   },
 
   // Accessibility
