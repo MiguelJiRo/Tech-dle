@@ -29,13 +29,34 @@ const ThemeIcon = ({ theme }) => {
   );
 };
 
+const Toggle = ({ checked, onChange, label, describedBy }) => (
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    aria-label={label}
+    aria-describedby={describedBy}
+    onClick={() => onChange(!checked)}
+    className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+      checked ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+    }`}
+  >
+    <span
+      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+        checked ? 'translate-x-5' : 'translate-x-0.5'
+      }`}
+    />
+  </button>
+);
+
 const SettingsModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
-  const { settings, setTheme } = useSettings();
+  const { settings, setTheme, setColorBlind } = useSettings();
+  const colorBlindHelpId = 'settings-colorblind-help';
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('settings.title')}>
-      <div className="space-y-5">
+      <div className="space-y-6">
         <fieldset>
           <legend className="font-bold text-base mb-2 text-gray-900 dark:text-white">{t('settings.theme')}</legend>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{t('settings.themeHelp')}</p>
@@ -62,6 +83,23 @@ const SettingsModal = ({ isOpen, onClose }) => {
             })}
           </div>
         </fieldset>
+
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-base text-gray-900 dark:text-white">{t('settings.colorBlind')}</p>
+              <p id={colorBlindHelpId} className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                {t('settings.colorBlindHelp')}
+              </p>
+            </div>
+            <Toggle
+              checked={settings.colorBlind}
+              onChange={setColorBlind}
+              label={t('settings.colorBlind')}
+              describedBy={colorBlindHelpId}
+            />
+          </div>
+        </div>
       </div>
     </Modal>
   );

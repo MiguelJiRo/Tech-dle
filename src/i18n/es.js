@@ -44,7 +44,9 @@ export default {
       dark: "Oscuro",
       light: "Claro"
     },
-    themeHelp: "Sigue la preferencia del sistema, o fija uno fijo."
+    themeHelp: "Sigue la preferencia del sistema, o fija uno fijo.",
+    colorBlind: "Modo daltónico",
+    colorBlindHelp: "Añade símbolos a las celdas para distinguir el resultado sin depender del color."
   },
 
   // Toasts

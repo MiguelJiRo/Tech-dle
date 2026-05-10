@@ -49,9 +49,13 @@ export const SettingsProvider = ({ children }) => {
     setSettings((prev) => ({ ...prev, theme }));
   }, []);
 
+  const setColorBlind = useCallback((value) => {
+    setSettings((prev) => ({ ...prev, colorBlind: Boolean(value) }));
+  }, []);
+
   const value = useMemo(
-    () => ({ settings, resolvedTheme, setTheme }),
-    [settings, resolvedTheme, setTheme],
+    () => ({ settings, resolvedTheme, setTheme, setColorBlind }),
+    [settings, resolvedTheme, setTheme, setColorBlind],
   );
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;

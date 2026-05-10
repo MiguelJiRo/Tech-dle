@@ -40,3 +40,13 @@ export const compareTechnologies = (guess, target) => {
 };
 
 export const hasWon = (comparison) => comparison.isTarget === true;
+
+export const matchSymbol = (match) => {
+  switch (match) {
+    case MATCH_TYPES.CORRECT: return '✓';
+    case MATCH_TYPES.PARTIAL: return '~';
+    case MATCH_TYPES.HIGHER:  return '↑';
+    case MATCH_TYPES.LOWER:   return '↓';
+    default:                  return '✕';
+  }
+};

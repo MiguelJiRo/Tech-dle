@@ -1,10 +1,19 @@
 import Modal from './Modal';
 import { useLanguage } from '../i18n/useLanguage';
+import { useSettings } from '../settings/useSettings';
 
 const logo = '/logo.png';
 
+const Swatch = ({ className, symbol, textClassName = 'text-white' }) => (
+  <div className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold ${textClassName} ${className}`}>
+    {symbol}
+  </div>
+);
+
 const HelpModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
+  const { settings } = useSettings();
+  const cb = settings.colorBlind;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('help.title')}>
@@ -34,19 +43,19 @@ const HelpModal = ({ isOpen, onClose }) => {
           <h3 className="font-bold text-gray-900 dark:text-white mb-2">{t('help.colorsTitle')}</h3>
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-green-600 rounded"></div>
+              <Swatch className="bg-green-600" symbol={cb ? '✓' : null} />
               <span>{t('help.colors.green')}</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-yellow-500 dark:bg-yellow-600 rounded"></div>
+              <Swatch className="bg-yellow-500 dark:bg-yellow-600" symbol={cb ? '~' : null} />
               <span>{t('help.colors.yellow')}</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-orange-500 dark:bg-orange-600 rounded"></div>
+              <Swatch className="bg-orange-500 dark:bg-orange-600" symbol={cb ? '↑↓' : null} />
               <span>{t('help.colors.orange')}</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-gray-300 dark:bg-gray-700 rounded"></div>
+              <Swatch className="bg-gray-300 dark:bg-gray-700" textClassName="text-gray-800 dark:text-white" symbol={cb ? '✕' : null} />
               <span>{t('help.colors.gray')}</span>
             </div>
           </div>
