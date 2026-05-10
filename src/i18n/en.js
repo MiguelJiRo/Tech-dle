@@ -40,6 +40,20 @@ export default {
     gameAlreadyOver: "The game is already over"
   },
 
+  // Accessibility
+  a11y: {
+    skipToContent: "Skip to content",
+    gridLabel: "Guess board",
+    emptyRow: "Attempt {n} of {total}, empty",
+    match: {
+      correct: "exact match",
+      partial: "partial match",
+      higher: "correct year is later",
+      lower: "correct year is earlier",
+      incorrect: "no match"
+    }
+  },
+
   // Color Guide
   colorGuide: {
     title: "Color Guide",

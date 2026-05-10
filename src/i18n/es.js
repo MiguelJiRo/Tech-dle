@@ -40,6 +40,20 @@ export default {
     gameAlreadyOver: "La partida ya ha terminado"
   },
 
+  // Accesibilidad
+  a11y: {
+    skipToContent: "Saltar al contenido",
+    gridLabel: "Tablero de intentos",
+    emptyRow: "Intento {n} de {total}, vacío",
+    match: {
+      correct: "coincidencia exacta",
+      partial: "coincidencia parcial",
+      higher: "el año correcto es mayor",
+      lower: "el año correcto es menor",
+      incorrect: "no coincide"
+    }
+  },
+
   // Color Guide
   colorGuide: {
     title: "Guía de Colores",

@@ -130,12 +130,19 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[70] focus:bg-blue-600 focus:text-white focus:px-3 focus:py-2 focus:rounded-md focus:font-semibold focus-visible:ring-2 focus-visible:ring-white"
+      >
+        {t('a11y.skipToContent')}
+      </a>
+
       <Header
         onOpenStats={() => setShowStats(true)}
         onOpenHelp={() => setShowHelp(true)}
       />
 
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <main id="main-content" className="container mx-auto px-4 py-8 max-w-4xl" tabIndex={-1}>
         <p className="text-center text-gray-400 mb-8">
           {t('header.subtitle')}
         </p>
@@ -151,7 +158,7 @@ function App() {
         )}
 
         {gameOver && (
-          <div className="text-center mb-6">
+          <div className="text-center mb-6" role="status" aria-live="polite">
             {gameWon ? (
               <div className="bg-green-900/20 border border-green-900 rounded-lg p-4">
                 <p className="text-2xl font-bold text-green-500 mb-2">{t('results.congratulations')}</p>
@@ -174,7 +181,7 @@ function App() {
         )}
 
         <ColorGuide />
-      </div>
+      </main>
 
       <StatsModal
         isOpen={showStats}
