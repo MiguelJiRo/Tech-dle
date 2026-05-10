@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { getDateKey, getTechnologyOfTheDay, technologies } from './technologies';
+import {
+  getDateKey,
+  getTechnologyOfTheDay,
+  getTechnologyForDateKey,
+  isValidDateKey,
+  millisUntilNextUtcMidnight,
+  technologies,
+} from './technologies';
 
 describe('getDateKey', () => {
   it('formats a UTC YYYY-MM-DD string', () => {
@@ -27,5 +34,43 @@ describe('getTechnologyOfTheDay', () => {
     const day1 = new Date(Date.UTC(2024, 0, 1));
     const dayAfterCycle = new Date(Date.UTC(2024, 0, 1 + technologies.length));
     expect(getTechnologyOfTheDay(day1).id).toBe(getTechnologyOfTheDay(dayAfterCycle).id);
+  });
+});
+
+describe('isValidDateKey', () => {
+  it('accepts well-formed YYYY-MM-DD', () => {
+    expect(isValidDateKey('2025-01-05')).toBe(true);
+    expect(isValidDateKey('2024-12-31')).toBe(true);
+  });
+  it('rejects malformed input', () => {
+    expect(isValidDateKey(null)).toBe(false);
+    expect(isValidDateKey('2025-1-5')).toBe(false);
+    expect(isValidDateKey('not-a-date')).toBe(false);
+    expect(isValidDateKey(20250105)).toBe(false);
+  });
+});
+
+describe('getTechnologyForDateKey', () => {
+  it('returns same tech as getTechnologyOfTheDay for the equivalent date', () => {
+    const date = new Date(Date.UTC(2025, 4, 10));
+    expect(getTechnologyForDateKey('2025-05-10').id).toBe(getTechnologyOfTheDay(date).id);
+  });
+  it('returns null for invalid input', () => {
+    expect(getTechnologyForDateKey('2025-1-1')).toBeNull();
+    expect(getTechnologyForDateKey(undefined)).toBeNull();
+  });
+});
+
+describe('millisUntilNextUtcMidnight', () => {
+  it('returns 24h when called at UTC midnight', () => {
+    const t = new Date(Date.UTC(2025, 5, 10, 0, 0, 0, 0));
+    expect(millisUntilNextUtcMidnight(t)).toBe(86_400_000);
+  });
+  it('returns 1h when called at 23:00 UTC', () => {
+    const t = new Date(Date.UTC(2025, 5, 10, 23, 0, 0, 0));
+    expect(millisUntilNextUtcMidnight(t)).toBe(3_600_000);
+  });
+  it('never returns negative', () => {
+    expect(millisUntilNextUtcMidnight(new Date(Date.UTC(2025, 5, 10, 12, 0)))).toBeGreaterThan(0);
   });
 });

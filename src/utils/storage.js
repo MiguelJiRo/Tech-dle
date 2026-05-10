@@ -1,6 +1,8 @@
 const STORAGE_KEY = 'techdle-game-state';
 const STATS_KEY = 'techdle-stats';
 
+export const sharedStorageKey = (dateKey) => `${STORAGE_KEY}-shared-${dateKey}`;
+
 const DEFAULT_STATS = {
   gamesPlayed: 0,
   gamesWon: 0,
@@ -26,10 +28,10 @@ const safeSetItem = (key, value) => {
   }
 };
 
-export const saveGameState = (state) => safeSetItem(STORAGE_KEY, JSON.stringify(state));
+export const saveGameState = (state, key = STORAGE_KEY) => safeSetItem(key, JSON.stringify(state));
 
-export const loadGameState = () => {
-  const saved = safeGetItem(STORAGE_KEY);
+export const loadGameState = (key = STORAGE_KEY) => {
+  const saved = safeGetItem(key);
   if (!saved) return null;
   try {
     return JSON.parse(saved);
