@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { technologies, getTechnologyOfTheDay, getDateKey } from './data/technologies';
 import { compareTechnologies, hasWon } from './utils/gameLogic';
 import { saveGameState, loadGameState, saveStats, loadStats } from './utils/storage';
@@ -8,9 +8,10 @@ import Header from './components/Header';
 import GuessGrid from './components/GuessGrid';
 import TechnologyInput from './components/TechnologyInput';
 import ColorGuide from './components/ColorGuide';
-import StatsModal from './components/StatsModal';
-import HelpModal from './components/HelpModal';
 import Footer from './components/Footer';
+
+const StatsModal = lazy(() => import('./components/StatsModal'));
+const HelpModal = lazy(() => import('./components/HelpModal'));
 
 const logo = '/logo.png';
 
@@ -24,6 +25,11 @@ function App() {
   const [stats, setStats] = useState(loadStats());
   const [showStats, setShowStats] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [hasOpenedStats, setHasOpenedStats] = useState(false);
+  const [hasOpenedHelp, setHasOpenedHelp] = useState(false);
+
+  const openStats = () => { setHasOpenedStats(true); setShowStats(true); };
+  const openHelp = () => { setHasOpenedHelp(true); setShowHelp(true); };
   const [currentDate] = useState(getDateKey());
 
   // Inicializar el juego
@@ -41,7 +47,7 @@ function App() {
 
       // Mostrar stats automáticamente si el juego terminó
       if (savedState.gameOver) {
-        setTimeout(() => setShowStats(true), 500);
+        setTimeout(() => { setHasOpenedStats(true); setShowStats(true); }, 500);
       }
     } else {
       // Nuevo día, limpiar estado
@@ -106,7 +112,7 @@ function App() {
       saveStats(newStats);
 
       // Mostrar modal de estadísticas después de un breve delay
-      setTimeout(() => setShowStats(true), 1000);
+      setTimeout(() => { setHasOpenedStats(true); setShowStats(true); }, 1000);
     }
   };
 
@@ -138,8 +144,8 @@ function App() {
       </a>
 
       <Header
-        onOpenStats={() => setShowStats(true)}
-        onOpenHelp={() => setShowHelp(true)}
+        onOpenStats={openStats}
+        onOpenHelp={openHelp}
       />
 
       <main id="main-content" className="container mx-auto px-4 py-8 max-w-4xl" tabIndex={-1}>
@@ -183,22 +189,27 @@ function App() {
         <ColorGuide />
       </main>
 
-      <StatsModal
-        isOpen={showStats}
-        onClose={() => setShowStats(false)}
-        stats={stats}
-        gameState={{
-          guesses,
-          gameOver,
-          gameWon,
-          targetTechnology,
-        }}
-      />
-
-      <HelpModal
-        isOpen={showHelp}
-        onClose={() => setShowHelp(false)}
-      />
+      <Suspense fallback={null}>
+        {hasOpenedStats && (
+          <StatsModal
+            isOpen={showStats}
+            onClose={() => setShowStats(false)}
+            stats={stats}
+            gameState={{
+              guesses,
+              gameOver,
+              gameWon,
+              targetTechnology,
+            }}
+          />
+        )}
+        {hasOpenedHelp && (
+          <HelpModal
+            isOpen={showHelp}
+            onClose={() => setShowHelp(false)}
+          />
+        )}
+      </Suspense>
 
       <Footer />
     </div>
