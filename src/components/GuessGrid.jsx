@@ -6,8 +6,23 @@ import { useSettings } from '../settings/useSettings';
 const yearArrow = (yearComparison) => {
   if (!yearComparison) return '';
   if (yearComparison.match === MATCH_TYPES.CORRECT) return '✓';
-  if (yearComparison.match === MATCH_TYPES.HIGHER) return '↑';
-  return '↓';
+  return yearComparison.direction === 'higher' ? '↑' : '↓';
+};
+
+const yearAriaLabel = (t, yearComparison, year) => {
+  const baseDirection = yearComparison.direction === 'higher'
+    ? t('a11y.match.higher')
+    : t('a11y.match.lower');
+  if (yearComparison.match === MATCH_TYPES.CORRECT) {
+    return `${t('grid.year')} ${year}, ${t('a11y.match.correct')}`;
+  }
+  if (yearComparison.match === MATCH_TYPES.PARTIAL) {
+    return `${t('grid.year')} ${year}, ${t('a11y.proximity.near')}, ${baseDirection}`;
+  }
+  if (yearComparison.match === MATCH_TYPES.INCORRECT) {
+    return `${t('grid.year')} ${year}, ${t('a11y.proximity.remote')}, ${baseDirection}`;
+  }
+  return `${t('grid.year')} ${year}, ${baseDirection}`;
 };
 
 const cellColor = (match) => {
@@ -38,7 +53,7 @@ const buildRowSummary = (t, comparison) => {
   if (!comparison) return '';
   return [
     `${t('grid.name')}: ${comparison.technology.name}`,
-    `${t('grid.year')} ${comparison.technology.year} (${matchLabel(t, comparison.year.match)})`,
+    yearAriaLabel(t, comparison.year, comparison.technology.year),
     `${t('grid.type')} ${t(`techTypes.${comparison.technology.type}`)} (${matchLabel(t, comparison.type)})`,
     `${t('grid.paradigm')} ${t(`paradigms.${comparison.technology.paradigm}`)} (${matchLabel(t, comparison.paradigm)})`,
     `${t('grid.typing')} ${t(`typings.${comparison.technology.typing}`)} (${matchLabel(t, comparison.typing)})`,
@@ -97,7 +112,7 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded, colorBlind }) 
       <Cell
         color={cellColor(comparison.year.match)}
         value={tech.year}
-        ariaLabel={`${t('grid.year')} ${tech.year}, ${matchLabel(t, comparison.year.match)}`}
+        ariaLabel={yearAriaLabel(t, comparison.year, tech.year)}
         animate={isJustAdded}
         delayIndex={1}
         badge={colorBlind ? matchSymbol(comparison.year.match) : null}

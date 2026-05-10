@@ -66,6 +66,10 @@ export default {
       higher: "el año correcto es mayor",
       lower: "el año correcto es menor",
       incorrect: "no coincide"
+    },
+    proximity: {
+      near: "muy cerca",
+      remote: "muy lejos"
     }
   },
 
@@ -74,8 +78,8 @@ export default {
     title: "Guía de Colores",
     correct: "Coincidencia exacta",
     partial: "Coincidencia parcial",
-    yearWrong: "Año incorrecto (↑ mayor / ↓ menor)",
-    incorrect: "No coincide"
+    yearWrong: "Año cercano o lejano (↑ mayor / ↓ menor)",
+    incorrect: "No coincide o año muy lejano"
   },
 
   // Stats Modal
@@ -102,9 +106,9 @@ export default {
     colorsTitle: "Colores:",
     colors: {
       green: "Coincidencia exacta",
-      yellow: "Coincidencia parcial (ej: Multi-paradigma)",
-      orange: "Año incorrecto (↑ el año correcto es mayor / ↓ es menor)",
-      gray: "No coincide"
+      yellow: "Coincidencia parcial (ej: Multi-paradigma) o año a ±5 años",
+      orange: "Año desviado entre 6 y 20 años (↑ el correcto es mayor / ↓ es menor)",
+      gray: "No coincide, o año a más de 20 años"
     },
     tip: "Consejo:",
     tipText: "Usa el buscador para encontrar tecnologías disponibles. Se actualizará automáticamente mientras escribes.",

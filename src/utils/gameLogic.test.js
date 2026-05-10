@@ -13,14 +13,25 @@ const python = { id: 3, name: 'Python', year: 1991, type: 'Lenguaje', paradigm: 
 const haskell = { id: 4, name: 'Haskell', year: 1990, type: 'Lenguaje', paradigm: 'Funcional', typing: 'Estático' };
 
 describe('compareYear', () => {
-  it('returns CORRECT when years match', () => {
-    expect(compareYear(2000, 2000)).toEqual({ match: MATCH_TYPES.CORRECT });
+  it('returns CORRECT with direction same and distance 0 when years match', () => {
+    expect(compareYear(2000, 2000)).toEqual({ match: MATCH_TYPES.CORRECT, direction: 'same', distance: 0 });
   });
-  it('returns HIGHER when target is later', () => {
-    expect(compareYear(1990, 2010)).toEqual({ match: MATCH_TYPES.HIGHER });
+  it('returns PARTIAL when within ±5 years (target later)', () => {
+    expect(compareYear(2008, 2010)).toEqual({ match: MATCH_TYPES.PARTIAL, direction: 'higher', distance: 2 });
   });
-  it('returns LOWER when target is earlier', () => {
-    expect(compareYear(2010, 1990)).toEqual({ match: MATCH_TYPES.LOWER });
+  it('returns PARTIAL exactly at the near threshold (5 years)', () => {
+    expect(compareYear(2005, 2010).match).toBe(MATCH_TYPES.PARTIAL);
+    expect(compareYear(2015, 2010).match).toBe(MATCH_TYPES.PARTIAL);
+  });
+  it('returns HIGHER when target is later by more than 5 but ≤ 20 years', () => {
+    expect(compareYear(1990, 2008)).toEqual({ match: MATCH_TYPES.HIGHER, direction: 'higher', distance: 18 });
+  });
+  it('returns LOWER when target is earlier by more than 5 but ≤ 20 years', () => {
+    expect(compareYear(2010, 1995)).toEqual({ match: MATCH_TYPES.LOWER, direction: 'lower', distance: 15 });
+  });
+  it('returns INCORRECT (remote) when distance > 20', () => {
+    expect(compareYear(1990, 2025)).toEqual({ match: MATCH_TYPES.INCORRECT, direction: 'higher', distance: 35 });
+    expect(compareYear(2020, 1980)).toEqual({ match: MATCH_TYPES.INCORRECT, direction: 'lower', distance: 40 });
   });
 });
 

@@ -8,14 +8,26 @@ export const MATCH_TYPES = {
 
 const MULTI = 'Multi-paradigma';
 
+export const YEAR_NEAR_THRESHOLD = 5;
+export const YEAR_FAR_THRESHOLD = 20;
+
 export const compareYear = (guessYear, targetYear) => {
-  if (guessYear === targetYear) {
-    return { match: MATCH_TYPES.CORRECT };
-  } else if (guessYear < targetYear) {
-    return { match: MATCH_TYPES.HIGHER };
-  } else {
-    return { match: MATCH_TYPES.LOWER };
+  const distance = Math.abs(guessYear - targetYear);
+  if (distance === 0) {
+    return { match: MATCH_TYPES.CORRECT, direction: 'same', distance: 0 };
   }
+  const direction = guessYear < targetYear ? 'higher' : 'lower';
+  if (distance <= YEAR_NEAR_THRESHOLD) {
+    return { match: MATCH_TYPES.PARTIAL, direction, distance };
+  }
+  if (distance <= YEAR_FAR_THRESHOLD) {
+    return {
+      match: direction === 'higher' ? MATCH_TYPES.HIGHER : MATCH_TYPES.LOWER,
+      direction,
+      distance,
+    };
+  }
+  return { match: MATCH_TYPES.INCORRECT, direction, distance };
 };
 
 export const compareField = (guessValue, targetValue) => {
