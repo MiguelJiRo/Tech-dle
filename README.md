@@ -1,149 +1,164 @@
-# Tech-dle
+<div align="center">
+  <img src="public/logo.png" alt="Tech-dle logo" width="120" />
+  <h1>Tech-dle</h1>
+  <p><strong>Wordle for technologies.</strong> Guess the language, framework, database or tool of the day in 6 attempts.</p>
+  <p>
+    <a href="https://tech-dle.vercel.app/">Play it live</a>
+    ·
+    <a href="https://github.com/MiguelJiRo/Tech-dle/issues">Report issue</a>
+  </p>
+  <img src="https://github.com/MiguelJiRo/Tech-dle/actions/workflows/ci.yml/badge.svg" alt="CI status" />
+</div>
 
-Un juego diario de adivinanza de tecnologías inspirado en Wordle. Adivina la tecnología del día basándote en sus características.
+---
 
-## Características
+## Highlights
 
-- **Juego diario**: Una nueva tecnología para adivinar cada día
-- **6 intentos**: Tienes 6 oportunidades para adivinar correctamente
-- **Sistema de pistas**: Colores que indican qué tan cerca estás de la respuesta correcta
-- **Estadísticas**: Rastrea tu progreso, rachas y distribución de intentos
-- **Persistencia local**: Tu progreso se guarda automáticamente en el navegador
-- **Compartir resultados**: Comparte tus victorias con emojis (sin spoilers)
-- **Multiidioma**: Soporte para español e inglés con detección automática del idioma del navegador
-- **Cambio de idioma**: Botón para cambiar entre idiomas en tiempo real
+- **Daily puzzle** with 6 attempts and rich, multi-tier hints.
+- **127 technologies** spanning languages, frameworks, databases and tools — from COBOL to Bun.
+- **6 languages** out of the box (English, Spanish, Portuguese, French, German, Italian) with browser auto-detection and a language switcher.
+- **Light, dark and system themes** with no flash on first paint.
+- **Color-blind mode** that adds symbols to every cell so the result is readable without relying on color.
+- **Hard mode** that enforces previous hints on subsequent guesses.
+- **Hint system** that reveals one categorical clue after 4 failed attempts.
+- **Year tolerance ranges**: exact / within 5 years / within 20 years / further — each with directional arrows.
+- **Archive mode** to replay any past puzzle, plus deep links (`?d=YYYY-MM-DD`) so friends can play the same one.
+- **Countdown** to the next daily puzzle, **confetti** on win (lazy-loaded, respects `prefers-reduced-motion`).
+- **Achievements** with 10 unlockable badges and a **history view** of the last 60 daily games.
+- **Stats**: streaks, win %, attempt distribution, share results with emoji grid.
+- **Accessibility**: focus-trapped modals, ARIA roles, live regions, skip-to-content, dynamic `<html lang>`.
+- **Installable PWA**: web manifest, OG/Twitter cards, sitemap, JSON-LD, `<noscript>` fallback.
+- **Robust storage**: tolerant to private mode, quota errors and corrupt data.
 
-## Cómo jugar
+## How to play
 
-1. **Escribe el nombre de una tecnología** en el campo de búsqueda
-2. **Selecciona una opción** de las sugerencias que aparecen
-3. **Observa las pistas** en colores:
-   - 🟩 **Verde**: Coincidencia exacta
-   - 🟨 **Amarillo**: Coincidencia parcial
-   - 🟧 **Naranja**: Año incorrecto (↑ mayor / ↓ menor)
-   - ⬛ **Gris**: No coincide
-4. **Usa la información** de tus intentos anteriores para hacer mejores suposiciones
+1. Type a technology name into the input. Filter by **type** with the pills above the input.
+2. Pick a suggestion (the matching substring is highlighted).
+3. Read the hints in each cell:
+   - 🟩 **Green** — exact match.
+   - 🟨 **Yellow** — partial match (e.g. *Multi-paradigm*) or year within ±5.
+   - 🟧 **Orange** — year off by 6 to 20 (with ↑ / ↓ arrow).
+   - ⬛ **Gray** — no match, or year more than 20 years off.
+4. Use the information to refine your next guess.
 
-## Características que se comparan
+The four compared attributes are **year**, **type**, **paradigm** and **typing**.
 
-- **Año**: Año de creación o lanzamiento
-- **Tipo**: Lenguaje, Framework, Base de Datos, Herramienta
-- **Paradigma**: Orientado a Objetos, Funcional, Multi-paradigma, etc.
-- **Tipado**: Estático, Dinámico, Gradual, o No aplica
+## Tech stack
 
-## Tecnologías utilizadas
+- **React 19** + **Vite 8** with code-splitting and lazy-loaded modals.
+- **Tailwind CSS 3** with `darkMode: 'class'` and full light/dark variants.
+- **Vitest** for unit testing (104 tests, run on every PR by GitHub Actions).
+- **canvas-confetti** for the win celebration (loaded on demand only).
+- **No backend** — everything runs in the browser, persisted to `localStorage`.
 
-- **React 18**: Biblioteca de UI
-- **Vite**: Build tool y dev server
-- **Tailwind CSS**: Framework de CSS utility-first
-- **LocalStorage**: Persistencia de datos del lado del cliente
-
-## Instalación y desarrollo
+## Getting started
 
 ```bash
-# Instalar dependencias
-npm install
-
-# Iniciar servidor de desarrollo
-npm run dev
-
-# Construir para producción
-npm run build
-
-# Previsualizar build de producción
-npm preview
+npm ci          # install dependencies
+npm run dev     # start the dev server
+npm test        # run the test suite
+npm run lint    # lint with eslint
+npm run build   # production build
+npm run preview # preview the production build
 ```
 
-## Estructura del proyecto
+Node 22 is recommended (matches the CI version).
+
+## Project structure
 
 ```
 Tech-dle/
+├── .github/
+│   ├── workflows/ci.yml        # Lint, test and build on PRs and main
+│   └── dependabot.yml          # Weekly grouped npm + actions updates
+├── public/                     # Favicons, manifest, OG image, robots, sitemap
 ├── src/
-│   ├── components/         # Componentes de React
-│   │   ├── Header.jsx
-│   │   ├── GuessGrid.jsx
-│   │   ├── TechnologyInput.jsx
+│   ├── components/             # UI components
+│   │   ├── Header.jsx          # Sticky header with language dropdown
+│   │   ├── GuessGrid.jsx       # Wordle-style flip grid
+│   │   ├── TechnologyInput.jsx # Autocomplete with type filters
+│   │   ├── HintPanel.jsx       # Hint button + revealed clues
+│   │   ├── Countdown.jsx       # Time until next puzzle (UTC)
+│   │   ├── Modal.jsx           # A11y modal (focus trap + ARIA)
+│   │   ├── StatsModal.jsx      # Stats, share, achievements panel
+│   │   ├── HelpModal.jsx
+│   │   ├── SettingsModal.jsx   # Theme + color-blind + hard mode toggles
+│   │   ├── ArchiveModal.jsx    # Browse and replay past puzzles
+│   │   ├── HistoryModal.jsx    # Last 60 daily games
+│   │   ├── TechIcon.jsx        # Type icons
 │   │   ├── ColorGuide.jsx
-│   │   ├── Modal.jsx
-│   │   ├── StatsModal.jsx
-│   │   └── HelpModal.jsx
+│   │   └── Footer.jsx
 │   ├── data/
-│   │   └── technologies.js # Base de datos de tecnologías
-│   ├── i18n/              # Sistema de internacionalización
-│   │   ├── es.js          # Traducciones en español
-│   │   ├── en.js          # Traducciones en inglés
-│   │   └── LanguageContext.jsx  # Contexto de idioma
+│   │   └── technologies.js     # The 127-entry dataset + day picker
+│   ├── i18n/                   # Translations + provider + dropdown source
+│   │   ├── es.js / en.js / pt.js / fr.js / de.js / it.js
+│   │   ├── languages.js        # SUPPORTED_LANGUAGES catalog
+│   │   ├── context.js          # React context shell
+│   │   ├── LanguageContext.jsx # Provider
+│   │   └── useLanguage.js      # Hook
+│   ├── settings/               # Theme, color-blind, hard mode
+│   ├── toast/                  # Toast provider + hook
 │   ├── utils/
-│   │   ├── gameLogic.js   # Lógica de comparación
-│   │   └── storage.js     # Gestión de localStorage
-│   ├── App.jsx            # Componente principal
-│   ├── main.jsx           # Punto de entrada
-│   └── index.css          # Estilos globales
-├── index.html
+│   │   ├── gameLogic.js        # compareYear / compareField / hard mode
+│   │   ├── achievements.js     # 10 achievements + diff helpers
+│   │   ├── confetti.js         # Lazy-loaded win burst
+│   │   └── storage.js          # localStorage helpers (tolerant)
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── index.html                  # Inline theme bootstrap + SEO meta
 ├── package.json
 ├── vite.config.js
-└── tailwind.config.js
+├── tailwind.config.js
+├── postcss.config.js
+└── eslint.config.js
 ```
 
-## Personalización
+## Customizing
 
-### Añadir más tecnologías
+### Add a technology
 
-Edita el archivo `src/data/technologies.js` y añade nuevas entradas al array:
+Append a new entry to [`src/data/technologies.js`](src/data/technologies.js):
 
-```javascript
+```js
 {
-  id: 41,
-  name: "NuevaTech",
-  year: 2023,
-  type: "Framework",
-  paradigm: "Declarativo",
-  typing: "Estático"
+  id: 128,
+  name: "MyTech",
+  year: 2024,
+  type: "Framework",          // Lenguaje | Framework | Base de Datos | Herramienta
+  paradigm: "Declarativo",    // Multi-paradigma | Orientado a Objetos | Funcional | Imperativo | Declarativo
+  typing: "Estático"          // Estático | Dinámico | Gradual | No aplica
 }
 ```
 
-### Modificar el número de intentos
+The dataset integrity test will validate the shape on `npm test`.
 
-Cambia el parámetro `maxGuesses` en `src/App.jsx`:
+### Add a language
 
-```javascript
-<GuessGrid guesses={guesses} maxGuesses={6} />
+1. Copy [`src/i18n/es.js`](src/i18n/es.js) to `src/i18n/<code>.js` and translate every value.
+2. Register it in [`src/i18n/LanguageContext.jsx`](src/i18n/LanguageContext.jsx) and append it to [`src/i18n/languages.js`](src/i18n/languages.js).
+3. The parity test in `src/i18n/locales.test.js` will fail if any key is missing or empty.
+
+### Tune game parameters
+
+- Year tolerance thresholds: `YEAR_NEAR_THRESHOLD` and `YEAR_FAR_THRESHOLD` in [`src/utils/gameLogic.js`](src/utils/gameLogic.js).
+- Hint trigger: `HINT_THRESHOLD` and `MAX_HINTS` in [`src/components/HintPanel.jsx`](src/components/HintPanel.jsx).
+- History cap: `HISTORY_LIMIT` in [`src/utils/storage.js`](src/utils/storage.js).
+- Max guesses per round: the `maxGuesses` prop on `<GuessGrid>` in [`src/App.jsx`](src/App.jsx).
+
+## Deploying
+
+The app is a static SPA. The current production target is [Vercel](https://vercel.com/), but anywhere that can serve `dist/` works (Netlify, Cloudflare Pages, GitHub Pages…).
+
+```bash
+npm run build
+# upload the dist/ directory
 ```
 
-### Añadir más idiomas
+## License
 
-1. Crea un nuevo archivo en `src/i18n/` (por ejemplo, `fr.js` para francés)
-2. Copia la estructura de `es.js` o `en.js` y traduce todos los textos
-3. Importa el nuevo idioma en `src/i18n/LanguageContext.jsx`:
+[MIT](LICENSE) — see the LICENSE file.
 
-```javascript
-import fr from './fr';
+## Credits
 
-const translations = {
-  es,
-  en,
-  fr  // Añadir el nuevo idioma
-};
-```
-
-4. La detección automática funcionará si el idioma del navegador coincide con el código del idioma
-
-## Roadmap
-
-- [x] Sistema de internacionalización (i18n) con español e inglés
-- [x] Detección automática del idioma del navegador
-- [ ] Modo de práctica con tecnologías aleatorias
-- [ ] Más categorías de tecnologías (Cloud, DevOps, etc.)
-- [ ] Más idiomas (francés, alemán, portugués, etc.)
-- [ ] Temas claro/oscuro
-- [ ] Animaciones mejoradas
-- [ ] PWA con soporte offline
-- [ ] Modo multijugador
-
-## Licencia
-
-MIT License
-
-## Créditos
-
-Desarrollado como proyecto de portfolio. Inspirado en Wordle y otros juegos de adivinanza diarios.
+Built by [@MiguelJiRo](https://github.com/MiguelJiRo). Inspired by Wordle and the daily-guessing-game family it spawned.
