@@ -70,7 +70,7 @@ const StatsModal = ({ isOpen, onClose, stats, gameState, onOpenHistory }) => {
             {stats.guessDistribution.map((count, index) => (
               <div key={index} className="flex items-center gap-2">
                 <span className="w-4 text-sm">{index + 1}</span>
-                <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded overflow-hidden">
+                <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-sm overflow-hidden">
                   <div
                     className="bg-blue-600 h-6 flex items-center justify-end pr-2 text-xs font-bold transition-all"
                     style={{
@@ -112,7 +112,7 @@ const StatsModal = ({ isOpen, onClose, stats, gameState, onOpenHistory }) => {
           <button
             type="button"
             onClick={onOpenHistory}
-            className="w-full px-3 py-2 rounded-md text-sm font-semibold border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="w-full px-3 py-2 rounded-md text-sm font-semibold border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500"
           >
             {t('stats.viewHistory')}
           </button>

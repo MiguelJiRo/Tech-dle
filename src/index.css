@@ -1,6 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Tailwind v4 dropped the implicit class-based dark variant. Re-enable it
+   so existing dark:* utilities keep targeting our <html class="dark"> toggle. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(8px) scale(0.98); }

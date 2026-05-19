@@ -53,7 +53,7 @@ const ArchiveModal = ({ isOpen, onClose }) => {
           type="button"
           onClick={playRandom}
           disabled={entries.length === 0}
-          className="w-full px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          className="w-full px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500"
         >
           {t('archive.random')}
         </button>
@@ -66,7 +66,7 @@ const ArchiveModal = ({ isOpen, onClose }) => {
               <li key={entry.dateKey}>
                 <a
                   href={`/?d=${entry.dateKey}`}
-                  className="flex items-center justify-between px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:focus-visible:bg-gray-700"
+                  className="flex items-center justify-between px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors focus-visible:outline-hidden focus-visible:bg-gray-100 dark:focus-visible:bg-gray-700"
                 >
                   <span className="font-mono text-sm text-gray-900 dark:text-gray-100">{entry.dateKey}</span>
                   <span className="flex items-center">{renderStatus(entry)}</span>

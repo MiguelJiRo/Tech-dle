@@ -76,13 +76,13 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="relative bg-white dark:bg-gray-800 rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 shadow-xl outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        className="relative bg-white dark:bg-gray-800 rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 shadow-xl outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 id={titleId} className="text-2xl font-bold">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors p-1 rounded-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors p-1 rounded-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-hidden"
             aria-label="Close"
             type="button"
           >

@@ -13,7 +13,7 @@ const HighlightedName = ({ name, query }) => {
   return (
     <>
       {name.slice(0, idx)}
-      <mark className="bg-yellow-200 dark:bg-yellow-500/40 text-inherit rounded px-0.5">
+      <mark className="bg-yellow-200 dark:bg-yellow-500/40 text-inherit rounded-sm px-0.5">
         {name.slice(idx, idx + query.length)}
       </mark>
       {name.slice(idx + query.length)}
@@ -84,7 +84,7 @@ const TechnologyInput = ({ technologies, onGuess, disabled }) => {
   };
 
   const pillBase =
-    'inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500';
+    'inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-xs font-semibold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500';
   const pillActive =
     'bg-blue-600 border-blue-600 text-white hover:bg-blue-700';
   const pillIdle =
@@ -128,7 +128,7 @@ const TechnologyInput = ({ technologies, onGuess, disabled }) => {
         onKeyDown={handleKeyDown}
         placeholder={t('game.guessPlaceholder')}
         disabled={disabled}
-        className="w-full px-4 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg border border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full px-4 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 rounded-lg border border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
         autoComplete="off"
         spellCheck="false"
       />

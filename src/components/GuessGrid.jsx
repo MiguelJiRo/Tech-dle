@@ -64,13 +64,13 @@ const Cell = ({ value, ariaLabel, color, animate, delayIndex, extra, badge }) =>
   <div
     role="cell"
     aria-label={ariaLabel}
-    className={`${color} relative rounded p-2 sm:p-3 min-h-16 sm:min-h-20 text-center flex flex-col justify-center items-center ${animate ? 'animate-[cell-flip_550ms_ease-out_both]' : ''}`}
+    className={`${color} relative rounded-sm p-2 sm:p-3 min-h-16 sm:min-h-20 text-center flex flex-col justify-center items-center ${animate ? 'animate-[cell-flip_550ms_ease-out_both]' : ''}`}
     style={animate ? { animationDelay: `${delayIndex * 140}ms` } : undefined}
   >
     {badge && (
       <span
         aria-hidden="true"
-        className="absolute top-1 right-1 text-[0.65rem] sm:text-xs font-bold leading-none bg-black/30 text-white rounded px-1 py-0.5 min-w-[1rem] text-center"
+        className="absolute top-1 right-1 text-[0.65rem] sm:text-xs font-bold leading-none bg-black/30 text-white rounded-sm px-1 py-0.5 min-w-[1rem] text-center"
       >
         {badge}
       </span>
@@ -91,7 +91,7 @@ const GuessRow = ({ comparison, rowIndex, totalRows, isJustAdded, colorBlind }) 
         aria-label={t('a11y.emptyRow').replace('{n}', rowIndex + 1).replace('{total}', totalRows)}
       >
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="bg-gray-100 dark:bg-gray-800 rounded min-h-16 sm:min-h-20 border border-gray-300 dark:border-gray-700" aria-hidden="true" />
+          <div key={i} className="bg-gray-100 dark:bg-gray-800 rounded-sm min-h-16 sm:min-h-20 border border-gray-300 dark:border-gray-700" aria-hidden="true" />
         ))}
       </div>
     );

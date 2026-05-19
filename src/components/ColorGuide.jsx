@@ -2,7 +2,7 @@ import { useLanguage } from '../i18n/useLanguage';
 import { useSettings } from '../settings/useSettings';
 
 const Swatch = ({ className, symbol }) => (
-  <div className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${className}`}>
+  <div className={`w-6 h-6 rounded-sm flex items-center justify-center text-xs font-bold text-white ${className}`}>
     {symbol}
   </div>
 );

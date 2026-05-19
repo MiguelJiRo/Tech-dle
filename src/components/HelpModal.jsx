@@ -5,7 +5,7 @@ import { useSettings } from '../settings/useSettings';
 const logo = '/logo.png';
 
 const Swatch = ({ className, symbol, textClassName = 'text-white' }) => (
-  <div className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold ${textClassName} ${className}`}>
+  <div className={`w-6 h-6 rounded-sm flex items-center justify-center text-xs font-bold ${textClassName} ${className}`}>
     {symbol}
   </div>
 );
@@ -61,7 +61,7 @@ const HelpModal = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-900">
+        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-sm border border-blue-200 dark:border-blue-900">
           <p className="text-sm">
             <strong>{t('help.tip')}</strong> {t('help.tipText')}
           </p>

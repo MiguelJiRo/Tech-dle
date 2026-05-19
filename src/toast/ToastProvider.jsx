@@ -52,7 +52,7 @@ export const ToastProvider = ({ children }) => {
           <div
             key={toast.id}
             role={toast.tone === 'error' ? 'alert' : 'status'}
-            className={`pointer-events-auto max-w-sm w-fit rounded-lg border px-4 py-2.5 text-sm font-medium shadow-xl backdrop-blur-sm animate-[toast-in_180ms_ease-out] ${toneClasses[toast.tone] ?? toneClasses.info}`}
+            className={`pointer-events-auto max-w-sm w-fit rounded-lg border px-4 py-2.5 text-sm font-medium shadow-xl backdrop-blur-xs animate-[toast-in_180ms_ease-out] ${toneClasses[toast.tone] ?? toneClasses.info}`}
           >
             {toast.message}
           </div>
