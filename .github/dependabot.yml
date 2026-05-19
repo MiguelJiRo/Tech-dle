@@ -13,6 +13,15 @@ updates:
     commit-message:
       prefix: "deps"
       include: scope
+    # Block major bumps for packages whose ecosystem hasn't caught up.
+    # eslint 10 requires eslint-plugin-react to release a compatible version
+    # (its current peerDep tops out at ^9.7), so the install fails on bump.
+    # Remove the entry once the plugin ships v10 support.
+    ignore:
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
     groups:
       react:
         patterns:
@@ -33,8 +42,7 @@ updates:
       tailwind:
         patterns:
           - "tailwindcss"
-          - "postcss"
-          - "autoprefixer"
+          - "@tailwindcss/*"
 
   - package-ecosystem: github-actions
     directory: "/"
