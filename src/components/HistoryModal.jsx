@@ -21,7 +21,7 @@ const HistoryModal = ({ isOpen, onClose }) => {
               <div className="min-w-0 flex-1">
                 <a
                   href={`/?d=${entry.date}`}
-                  className="block font-mono text-xs text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 focus-visible:outline-none focus-visible:underline"
+                  className="block font-mono text-xs text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 focus-visible:outline-hidden focus-visible:underline"
                 >
                   {entry.date}
                 </a>

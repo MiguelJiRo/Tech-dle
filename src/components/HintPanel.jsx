@@ -33,7 +33,7 @@ const HintPanel = ({ guesses, gameOver, revealedHints, onReveal, canReveal }) =>
         <button
           type="button"
           onClick={onReveal}
-          className="w-full px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          className="w-full px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500"
         >
           {t('game.revealHint')}
         </button>

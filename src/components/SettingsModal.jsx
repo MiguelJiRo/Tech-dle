@@ -37,12 +37,12 @@ const Toggle = ({ checked, onChange, label, describedBy }) => (
     aria-label={label}
     aria-describedby={describedBy}
     onClick={() => onChange(!checked)}
-    className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+    className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 ${
       checked ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
     }`}
   >
     <span
-      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${
         checked ? 'translate-x-5' : 'translate-x-0.5'
       }`}
     />
@@ -71,7 +71,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                   role="radio"
                   aria-checked={active}
                   onClick={() => setTheme(theme)}
-                  className={`flex flex-col items-center gap-2 px-3 py-3 rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                  className={`flex flex-col items-center gap-2 px-3 py-3 rounded-lg border transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     active
                       ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-200 dark:border-blue-400'
                       : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700/60'

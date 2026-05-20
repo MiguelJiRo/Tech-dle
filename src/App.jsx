@@ -247,7 +247,7 @@ function App() {
             <span>{t('game.sharedBanner').replace('{date}', currentDate)}</span>
             <a
               href="/"
-              className="font-semibold underline hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded"
+              className="font-semibold underline hover:no-underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500 rounded-sm"
             >
               {t('game.backToToday')}
             </a>

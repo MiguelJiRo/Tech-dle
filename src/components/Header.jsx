@@ -4,7 +4,7 @@ import { SUPPORTED_LANGUAGES } from '../i18n/languages';
 
 const logo = '/logo.png';
 
-const iconBtn = 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors p-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500';
+const iconBtn = 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors p-2 rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500';
 
 const LanguageMenu = () => {
   const { language, changeLanguage } = useLanguage();
@@ -81,7 +81,7 @@ const Header = ({ onOpenStats, onOpenHelp, onOpenSettings, onOpenArchive }) => {
   const { t } = useLanguage();
 
   return (
-    <header className="border-b border-gray-200 dark:border-gray-800/80 bg-white/70 dark:bg-gray-900/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-900/60 sticky top-0 z-30 mb-8">
+    <header className="border-b border-gray-200 dark:border-gray-800/80 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-900/60 sticky top-0 z-30 mb-8">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center gap-2">
         <div className="flex gap-1">
           <button
@@ -118,7 +118,7 @@ const Header = ({ onOpenStats, onOpenHelp, onOpenSettings, onOpenArchive }) => {
           </button>
         </div>
 
-        <a href="/" className="flex items-center gap-2 sm:gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg" aria-label="Tech-dle - inicio">
+        <a href="/" className="flex items-center gap-2 sm:gap-3 group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg" aria-label="Tech-dle - inicio">
           <img
             src={logo}
             alt=""
